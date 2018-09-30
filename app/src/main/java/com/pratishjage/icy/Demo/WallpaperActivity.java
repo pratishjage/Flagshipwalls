@@ -59,7 +59,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
                 case R.id.navigation_dashboard:
 
                     if (osFragment == null) {
-                        osFragment = OSFragment.newInstance(null, null);
+                        osFragment = OSFragment.newInstance();
                         fragmentTransaction.add(R.id.main_container, osFragment, getString(R.string.tag_fragment_os));
                         fragmentTransaction.commit();
                         mfragmentTags.add(getString(R.string.tag_fragment_os));
