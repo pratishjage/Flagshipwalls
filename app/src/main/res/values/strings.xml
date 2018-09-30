@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Flagship Walls</string>
+    <string name="title_activity_wallpaper">WallpaperActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_os">OS</string>
+    <string name="title_devices">Devices</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="tag_fragment_home">home_fragment</string>
+    <string name="tag_fragment_os">os_fragment</string>
+    <string name="tag_fragment_devices">devices_fragment</string>
+    <string name="intent_where_tag">intent_where_tag</string>
+    <string name="intent_where_value">intent_where_value</string>
+    <string name="tag_fragment_query_wallpaper">tag_fragment_query_wallpaper</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+   <!-- <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="ad_unit_id">ca-app-pub-3940256099942544/8135179316</string>
+
+-->
+    <!--<string name="admob_app_id">ca-app-pub-3984559846472825~2334303278</string>
+    <string name="ad_unit_id">ca-app-pub-3940256099942544/2247696110</string>
+-->
+//new Wallp
+    <string name="admob_app_id">ca-app-pub-3984559846472825~2334303278</string>
+    <string name="ad_unit_id">ca-app-pub-3984559846472825/9962628812</string>
+
+</resources>

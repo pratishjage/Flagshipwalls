@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Demo.OSFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progressbar"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="60dp"
+        android:layout_height="53dp"
+        android:layout_gravity="center" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/os_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
+</FrameLayout>
