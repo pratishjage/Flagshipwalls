@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -28,13 +29,13 @@ import java.util.List;
 
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class QueryWallpaperFrgment extends Fragment implements WallpaperListner {
+public class QueryWallpaperFrgment extends Fragment implements Walladp.LoadingListner {
 
 
-    // TODO: Rename and change types of parameters
     private String mWhereTag;
     private String mWhereValue;
 
@@ -45,11 +46,13 @@ public class QueryWallpaperFrgment extends Fragment implements WallpaperListner 
 
 
     List<WallpaperData> wallpaperDataList;
-    WallpaperrAdapter adapter;
+    Walladp adapter;
     private ListenerRegistration queryListner;
     ContentLoadingProgressBar progressBar;
     LinearLayout emptyLayout;
     private InterstitialAd mInterstitialAd;
+    private Query baseQuery;
+
     public QueryWallpaperFrgment() {
         // Required empty public constructor
     }
@@ -71,120 +74,42 @@ public class QueryWallpaperFrgment extends Fragment implements WallpaperListner 
         return inflater.inflate(R.layout.fragment_query_wallpaper_frgment, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-       /* if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        //    mListener = null;
-    }
-
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "onViewCreated: ");
-        mInterstitialAd = new InterstitialAd(getContext());
-        mInterstitialAd.setAdUnitId(getContext().getString(R.string.ad_unit_id));
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
         recyclerview = view.findViewById(R.id.recyclerview);
         progressBar = view.findViewById(R.id.progressbar);
         emptyLayout = view.findViewById(R.id.emptylayout);
         wallpaperDataList = new ArrayList<>();
         recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new WallpaperrAdapter(wallpaperDataList, getActivity(),this);
-        recyclerview.setAdapter(adapter);
 
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                // Load the next interstitial.
-                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-            }
-
-        });
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        progressBar.show();
-        queryListner = db.collection("debug_wallpaper").
+        baseQuery = db.collection("debug_wallpaper").
                 whereEqualTo(mWhereTag, mWhereValue)
-                .orderBy("release_date", Query.Direction.ASCENDING).
-                        addSnapshotListener(new EventListener<QuerySnapshot>() {
-                            @Override
-                            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
-                                if (e != null) {
+                .orderBy("release_date", Query.Direction.ASCENDING);
 
-                                    Log.d(TAG, "onEvent: " + e.getCode() + " , " + e);
-                                    System.err.println("Listen failed:" + e);
-                                    if (wallpaperDataList.size() == 0) {
-                                        progressBar.setVisibility(View.GONE);
-                                        emptyLayout.setVisibility(View.VISIBLE);
-                                        recyclerview.setVisibility(View.GONE);
-                                    }
-                                    progressBar.hide();
-                                    return;
-                                }
+        PagedList.Config config = new PagedList.Config.Builder()
+                .setEnablePlaceholders(true)
+                .setPrefetchDistance(4)
+                .setPageSize(5)
+                .build();
 
-                                for (DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
-                                    switch (documentChange.getType()) {
-                                        case ADDED:
-                                            wallpaperDataList.add(documentChange.getDocument().toObject(WallpaperData.class));
+        FirestorePagingOptions<WallpaperData> options = new FirestorePagingOptions.Builder<WallpaperData>()
+                .setLifecycleOwner(this)
+                .setQuery(baseQuery, config, WallpaperData.class)
+                .build();
 
-                                            break;
-                                        case MODIFIED:
-                                            // System.out.println("Modified city: " + dc.getDocument().getData());
-                                            break;
-                                        case REMOVED:
-                                            wallpaperDataList.remove(documentChange.getDocument().toObject(WallpaperData.class));
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                                adapter.notifyDataSetChanged();
-                                if (wallpaperDataList.size() == 0) {
-                                    progressBar.setVisibility(View.GONE);
-                                    emptyLayout.setVisibility(View.VISIBLE);
-                                    recyclerview.setVisibility(View.GONE);
-                                } else {
-                                    progressBar.setVisibility(View.GONE);
-                                    emptyLayout.setVisibility(View.GONE);
-                                    recyclerview.setVisibility(View.VISIBLE);
-                                }
-                                progressBar.hide();
-
-
-                            }
-                        });
+        adapter = new Walladp(options, getContext(),this);
+        recyclerview.setAdapter(adapter);
     }
-
 
     @Override
-    public void onWallpaperSet(String imgurl) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getActivity(), "Wallpaper set", Toast.LENGTH_SHORT).show();
-                adapter.notifyDataSetChanged();
-                if (mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                }
-            }
-        });
+    public void onLoadingFinished() {
+        progressBar.setVisibility(View.GONE);
+        emptyLayout.setVisibility(View.VISIBLE);
+        recyclerview.setVisibility(View.GONE);
     }
+
+
+
 }

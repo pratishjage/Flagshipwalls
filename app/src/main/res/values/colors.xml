@@ -18,7 +18,7 @@
     <color name="black">#000000</color>
 
     <color name="white_overlay">#d0edede4</color>
-    <color name="black_overlay">#b9887E7E</color>
+    <color name="black_overlay">#3f000000</color>
     <!-- <color name="grey_100">#86708c</color>
     <color name="grey_200">#676b73</color>
     <color name="grey_300">#898180</color>

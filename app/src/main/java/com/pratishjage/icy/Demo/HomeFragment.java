@@ -41,21 +41,23 @@ import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.paging.PagedList;
+
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
-public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class HomeFragment extends Fragment  {
 
 
     RecyclerView recyclerview;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<WallpaperData> wallpaperDataList;
     LinearLayoutManager linearLayoutManager;
-    SwipeRefreshLayout refreshLayout;
-    Walladp adapter;
 
+    Walladp adapter;
+    Query baseQuery;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -83,14 +85,37 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerview = view.findViewById(R.id.recyclerview);
-        refreshLayout = view.findViewById(R.id.refreshlayout);
-        refreshLayout.setOnRefreshListener(this);
-        wallpaperDataList = new ArrayList<>();
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerview.setLayoutManager(linearLayoutManager);
 
-        Query baseQuery = db.collection("debug_wallpaper")
+        /*view.findViewById(R.id.sort_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter=null;
+                baseQuery = db.collection("debug_wallpaper")
+                        .orderBy("release_date", Query.Direction.ASCENDING);
+                PagedList.Config config = new PagedList.Config.Builder()
+                        .setEnablePlaceholders(true)
+                        .setPrefetchDistance(4)
+                        .setPageSize(5)
+                        .build();
+
+                FirestorePagingOptions<WallpaperData> options = new FirestorePagingOptions.Builder<WallpaperData>()
+                        .setLifecycleOwner(getActivity())
+                        .setQuery(baseQuery, config, WallpaperData.class)
+                        .build();
+
+                adapter = new Walladp(options);
+                recyclerview.setAdapter(adapter);
+            }
+        });*/
+        wallpaperDataList = new ArrayList<>();
+       // linearLayoutManager = new LinearLayoutManager(getActivity());
+
+
+        recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+
+         baseQuery = db.collection("debug_wallpaper")
                 .orderBy("release_date", Query.Direction.DESCENDING);
+
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
                 .setPrefetchDistance(4)
@@ -102,13 +127,8 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 .setQuery(baseQuery, config, WallpaperData.class)
                 .build();
 
-        adapter = new Walladp(options);
+        adapter = new Walladp(options,getContext());
         recyclerview.setAdapter(adapter);
     }
 
-
-    @Override
-    public void onRefresh() {
-        adapter.retry();
-    }
 }

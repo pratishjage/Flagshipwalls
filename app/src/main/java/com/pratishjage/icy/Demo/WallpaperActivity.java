@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.pratishjage.icy.Dialogs.BottomSheetFragment;
 import com.pratishjage.icy.FragmentTag;
 import com.pratishjage.icy.R;
 
@@ -76,7 +77,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
                 case R.id.navigation_notifications:
 
                     if (devicesFragment == null) {
-                        devicesFragment = DevicesFragment.newInstance(null, null);
+                        devicesFragment = DevicesFragment.newInstance();
                         fragmentTransaction.add(R.id.main_container, devicesFragment, getString(R.string.tag_fragment_devices));
                         fragmentTransaction.commit();
                         mfragmentTags.add(getString(R.string.tag_fragment_devices));
@@ -225,6 +226,17 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
 
         mFragments.add(new FragmentTag(queryWallpaperFrgment, getString(R.string.tag_fragment_query_wallpaper)));
         setFragmentVisible(getString(R.string.tag_fragment_query_wallpaper));
+    }
+
+    @Override
+    public void showWallpaperDialog(String wallurl) {
+        BottomSheetFragment bottomSheetFragment = new BottomSheetFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString(AppConstants.WALLURL,wallurl);
+        bottomSheetFragment.setArguments(bundle);
+        bottomSheetFragment.show(getSupportFragmentManager(),"bottom");
+
+
     }
 
     private void hideBottomNavigation() {
