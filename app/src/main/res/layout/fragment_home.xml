@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Demo.HomeFragment"
+    tools:context=".Fragments.HomeFragment"
     tools:ignore="MissingDefaultResource">
 
     <androidx.core.widget.ContentLoadingProgressBar
@@ -41,12 +41,4 @@
                 android:visibility="invisible" />-->
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:text="sort"
-        android:visibility="gone"
-        android:id="@+id/sort_btn"
-        />
 </FrameLayout>

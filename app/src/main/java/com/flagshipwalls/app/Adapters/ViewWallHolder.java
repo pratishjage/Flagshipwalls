@@ -1,11 +1,11 @@
-package com.pratishjage.icy.Demo;
+package com.flagshipwalls.app.Adapters;
 
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.button.MaterialButton;
-import com.pratishjage.icy.R;
+import com.flagshipwalls.app.R;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;

@@ -1,4 +1,4 @@
-package com.pratishjage.icy;
+package com.flagshipwalls.app.utils;
 
 import androidx.fragment.app.Fragment;
 

@@ -1,4 +1,4 @@
-package com.pratishjage.icy.Demo;
+package com.flagshipwalls.app.interfaces;
 
 public interface IWallpaperActivity {
      void inflateQueryWallpaperFragment(String whereTag, String whereValue);

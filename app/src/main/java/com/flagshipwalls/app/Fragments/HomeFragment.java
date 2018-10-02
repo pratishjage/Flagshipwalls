@@ -1,36 +1,19 @@
-package com.pratishjage.icy.Demo;
+package com.flagshipwalls.app.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
-import android.widget.Toast;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
-import com.firebase.ui.firestore.paging.LoadingState;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.pratishjage.icy.R;
-import com.pratishjage.icy.WallpaperData;
-import com.pratishjage.icy.WallpaperrAdapter;
+import com.flagshipwalls.app.Adapters.Walladp;
+import com.flagshipwalls.app.R;
+import com.flagshipwalls.app.beans.WallpaperData;
+import com.flagshipwalls.app.interfaces.LoadingListner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,26 +21,25 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.ContentLoadingProgressBar;
-import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.paging.PagedList;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
-public class HomeFragment extends Fragment  {
+public class HomeFragment extends Fragment implements LoadingListner {
 
 
     RecyclerView recyclerview;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<WallpaperData> wallpaperDataList;
     LinearLayoutManager linearLayoutManager;
-
+    ContentLoadingProgressBar progressbar;
     Walladp adapter;
     Query baseQuery;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -85,7 +67,7 @@ public class HomeFragment extends Fragment  {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerview = view.findViewById(R.id.recyclerview);
-
+        progressbar = view.findViewById(R.id.progressbar);
         /*view.findViewById(R.id.sort_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,12 +90,12 @@ public class HomeFragment extends Fragment  {
             }
         });*/
         wallpaperDataList = new ArrayList<>();
-       // linearLayoutManager = new LinearLayoutManager(getActivity());
+        // linearLayoutManager = new LinearLayoutManager(getActivity());
 
 
         recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
-         baseQuery = db.collection("debug_wallpaper")
+        baseQuery = db.collection("debug_wallpaper")
                 .orderBy("release_date", Query.Direction.DESCENDING);
 
         PagedList.Config config = new PagedList.Config.Builder()
@@ -127,8 +109,12 @@ public class HomeFragment extends Fragment  {
                 .setQuery(baseQuery, config, WallpaperData.class)
                 .build();
 
-        adapter = new Walladp(options,getContext());
+        adapter = new Walladp(options, getContext(), this);
         recyclerview.setAdapter(adapter);
     }
 
+    @Override
+    public void onLoadingFinished() {
+        progressbar.hide();
+    }
 }

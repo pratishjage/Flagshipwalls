@@ -1,28 +1,21 @@
-package com.pratishjage.icy.Demo;
+package com.flagshipwalls.app.Fragments;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.pratishjage.icy.R;
-import com.pratishjage.icy.WallpaperData;
-import com.pratishjage.icy.WallpaperrAdapter;
+import com.flagshipwalls.app.Adapters.Walladp;
+import com.flagshipwalls.app.R;
+import com.flagshipwalls.app.beans.WallpaperData;
+import com.flagshipwalls.app.interfaces.LoadingListner;
+import com.flagshipwalls.app.utils.AppConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +26,7 @@ import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class QueryWallpaperFrgment extends Fragment implements Walladp.LoadingListner {
+public class QueryWallpaperFrgment extends Fragment implements LoadingListner {
 
 
     private String mWhereTag;
@@ -99,17 +92,18 @@ public class QueryWallpaperFrgment extends Fragment implements Walladp.LoadingLi
                 .setQuery(baseQuery, config, WallpaperData.class)
                 .build();
 
-        adapter = new Walladp(options, getContext(),this);
+        adapter = new Walladp(options, getContext(), this);
         recyclerview.setAdapter(adapter);
     }
 
     @Override
     public void onLoadingFinished() {
-        progressBar.setVisibility(View.GONE);
-        emptyLayout.setVisibility(View.VISIBLE);
-        recyclerview.setVisibility(View.GONE);
+        if (adapter.getItemCount() == 0) {
+            progressBar.setVisibility(View.GONE);
+            emptyLayout.setVisibility(View.VISIBLE);
+            recyclerview.setVisibility(View.GONE);
+        }
     }
-
 
 
 }

@@ -1,34 +1,53 @@
-package com.pratishjage.icy.Demo;
+package com.flagshipwalls.app.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.pratishjage.icy.R;
+import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.flagshipwalls.app.interfaces.IWallpaperActivity;
+import com.flagshipwalls.app.beans.OSData;
+import com.flagshipwalls.app.R;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class OSAdapter extends RecyclerView.Adapter<OSAdapter.OSHolder> {
+public class OsAdp extends FirestorePagingAdapter<OSData,OsAdp.OSHolder> {
 
-
-    List<OSData> osDataList;
-    Context context;
     private IWallpaperActivity inteface;
+    Context context;
+    public OsAdp(@NonNull FirestorePagingOptions<OSData> options,Context context) {
+        super(options);
+        this.context=context;
+    }
 
-    public OSAdapter(List<OSData> osDataList, Context context) {
-        this.osDataList = osDataList;
-        this.context = context;
+    @Override
+    protected void onBindViewHolder(@NonNull OSHolder holder, final int position, @NonNull final OSData osData) {
+        holder.mainLayout.setBackgroundColor(getBgColor(position));
+        holder.osNameText.setText(osData.getName());
+        holder.osLogo.setImageURI(osData.getPlatform_logo_url());
+        holder.releseDateTxt.setText(" · " + getYearforDate(osData.getRelease_date()));
+        holder.mainLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                inteface.inflateQueryWallpaperFragment("osName",osData.getName());
+            }
+        });
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        inteface = (IWallpaperActivity) context;
     }
 
     @NonNull
@@ -37,32 +56,6 @@ public class OSAdapter extends RecyclerView.Adapter<OSAdapter.OSHolder> {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.os_item, parent, false);
 
         return new OSHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull OSHolder holder, final int position) {
-        holder.mainLayout.setBackgroundColor(getBgColor(position));
-        holder.osNameText.setText(osDataList.get(position).getName());
-        holder.osLogo.setImageURI(osDataList.get(position).getPlatform_logo_url());
-        holder.releseDateTxt.setText(" · " + getYearforDate(osDataList.get(position).getRelease_date()));
-        holder.mainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                inteface.inflateQueryWallpaperFragment("osName", osDataList.get(position).getName());
-            }
-        });
-    }
-
-    @Override
-    public int getItemCount() {
-        return osDataList.size();
-    }
-
-
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        inteface = (IWallpaperActivity) context;
     }
 
     public class OSHolder extends RecyclerView.ViewHolder {
@@ -79,7 +72,6 @@ public class OSAdapter extends RecyclerView.Adapter<OSAdapter.OSHolder> {
             releseDateTxt = itemView.findViewById(R.id.relese_date_txt);
         }
     }
-
 
     private int getBgColor(int position) {
         int i;

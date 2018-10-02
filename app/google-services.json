@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:683453161718:android:e25abe47fc7bed08",
+        "mobilesdk_app_id": "1:683453161718:android:b74faf50cf5fcfeb",
         "android_client_info": {
-          "package_name": "com.pratishjage.icy"
+          "package_name": "com.flagshipwalls.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "683453161718-v47m663us6i1i1a3vkmb9vrobp12ih0k.apps.googleusercontent.com",
+          "client_id": "683453161718-d7uev5qut06bkk6g5spp4sefrusl4ed2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.pratishjage.icy",
+            "package_name": "com.flagshipwalls.app",
             "certificate_hash": "30ca13708a62134434fa6a94a617d01267ae1992"
           }
         },

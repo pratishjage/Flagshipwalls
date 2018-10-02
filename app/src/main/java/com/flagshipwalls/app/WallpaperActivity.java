@@ -1,21 +1,25 @@
-package com.pratishjage.icy.Demo;
+package com.flagshipwalls.app;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.pratishjage.icy.Dialogs.BottomSheetFragment;
-import com.pratishjage.icy.FragmentTag;
-import com.pratishjage.icy.R;
+import com.flagshipwalls.app.Dialogs.SetWallpaperDialog;
+import com.flagshipwalls.app.Fragments.DevicesFragment;
+import com.flagshipwalls.app.Fragments.HomeFragment;
+import com.flagshipwalls.app.Fragments.OSFragment;
+import com.flagshipwalls.app.Fragments.QueryWallpaperFrgment;
+import com.flagshipwalls.app.interfaces.IWallpaperActivity;
+import com.flagshipwalls.app.interfaces.WallpaperListner;
+import com.flagshipwalls.app.utils.FragmentTag;
+import com.flagshipwalls.app.utils.AppConstants;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
@@ -42,6 +46,8 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
     private ImageView backArrow, logoImageview;
     TextView headerText;
     String header;
+    private InterstitialAd mInterstitialAd;
+
     String TAG = getClass().getSimpleName();
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -121,7 +127,22 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         init();
+        setUpAd();
 
+    }
+
+    private void setUpAd() {
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.ad_unit_id));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Load the next interstitial.
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
+        });
     }
 
     private void init() {
@@ -230,14 +251,13 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
 
     @Override
     public void showWallpaperDialog(String wallurl, String downloadurl) {
-        BottomSheetFragment bottomSheetFragment = new BottomSheetFragment(this);
-        Bundle bundle=new Bundle();
-        bundle.putString(AppConstants.WALLURL,wallurl);
-        bundle.putString(AppConstants.DOWNLOAD_URL,downloadurl);
-        bottomSheetFragment.setArguments(bundle);
-        bottomSheetFragment.show(getSupportFragmentManager(),"bottom");
+        SetWallpaperDialog setWallpaperDialog = new SetWallpaperDialog(this);
+        Bundle bundle = new Bundle();
+        bundle.putString(AppConstants.WALLURL, wallurl);
+        bundle.putString(AppConstants.DOWNLOAD_URL, downloadurl);
+        setWallpaperDialog.setArguments(bundle);
+        setWallpaperDialog.show(getSupportFragmentManager(), "bottom");
     }
-
 
 
     private void hideBottomNavigation() {
@@ -263,7 +283,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
     private void showLogoInFragment() {
         logoImageview.setVisibility(View.GONE);
         headerText.setVisibility(View.VISIBLE);
-        header="Flagship Walls";
+        header = "Flagship Walls";
         headerText.setText(header);
 
       /*  logoImageview.setVisibility(View.VISIBLE);
@@ -277,7 +297,12 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(),"Wallpaper Set",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Wallpaper Set", Toast.LENGTH_SHORT).show();
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
+                    Log.d("TAG", "The interstitial wasn't loaded yet.");
+                }
             }
         });
     }

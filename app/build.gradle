@@ -4,7 +4,7 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.pratishjage.icy"
+        applicationId "com.flagshipwalls.app"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1

@@ -1,4 +1,4 @@
-package com.pratishjage.icy.Demo;
+package com.flagshipwalls.app.utils;
 
 public class AppConstants {
     public static final String WALLURL = "wallurl";

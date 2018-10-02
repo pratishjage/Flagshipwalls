@@ -1,8 +1,6 @@
-package com.pratishjage.icy.Demo;
+package com.flagshipwalls.app.Fragments;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +14,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.pratishjage.icy.Adapters.OsAdp;
-import com.pratishjage.icy.R;
-import com.pratishjage.icy.WallpaperData;
+import com.flagshipwalls.app.Adapters.OsAdp;
+import com.flagshipwalls.app.R;
+import com.flagshipwalls.app.beans.OSData;
 
 import java.util.ArrayList;
 import java.util.List;

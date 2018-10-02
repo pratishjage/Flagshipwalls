@@ -1,4 +1,4 @@
-package com.pratishjage.icy.Demo;
+package com.flagshipwalls.app.interfaces;
 
 public interface WallpaperListner {
     void onWallpaperSet(String imgurl);

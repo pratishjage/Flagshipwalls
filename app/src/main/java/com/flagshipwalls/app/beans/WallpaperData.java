@@ -1,4 +1,4 @@
-package com.pratishjage.icy;
+package com.flagshipwalls.app.beans;
 
 public class WallpaperData {
     String description;

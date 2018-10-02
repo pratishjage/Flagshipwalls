@@ -1,4 +1,4 @@
-package com.pratishjage.icy.Demo;
+package com.flagshipwalls.app.beans;
 
 import java.util.Date;
 
