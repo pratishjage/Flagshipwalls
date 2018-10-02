@@ -35,18 +35,7 @@ public class DeviceAdp extends FirestorePagingAdapter<DeviceData, DeviceAdp.Devi
         holder.deviceNameTxt.setText(deviceData.getDeviceName());
         holder.osNameTxt.setText(deviceData.getOsName());
         holder.deviceReleaseDateTxt.setText(getYearforDate(deviceData.getDevice_release_date()));
-
-
-       /* db.collection("os").document(deviceData.getOsID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    Log.d(TAG, "onComplete:url " + document.getString("platform_logo_url"));
-                    holder.osLogoImg.setImageURI(document.getString("platform_logo_url"));
-                }
-            }
-        });*/
+        holder.osLogoImg.setImageURI(deviceData.getPlatform_logo_url());
         holder.maindeviceLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,6 +71,7 @@ public class DeviceAdp extends FirestorePagingAdapter<DeviceData, DeviceAdp.Devi
             maindeviceLayout = itemView.findViewById(R.id.main_device_item);
         }
     }
+
     private String getYearforDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);

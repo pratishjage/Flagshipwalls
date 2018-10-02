@@ -26,6 +26,9 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admob_app_id"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="994a62638600757e6ebca8040e1ab94539b25d50" />
     </application>
 
 </manifest>
