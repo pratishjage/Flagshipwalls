@@ -6,7 +6,7 @@ public class WallpaperData {
     String deviceName;
     String imgurl;
     String name;
-
+    String compressed_imgurl;
 
     public String getDescription() {
         return description;
@@ -48,5 +48,11 @@ public class WallpaperData {
         this.name = name;
     }
 
+    public String getCompressed_imgurl() {
+        return compressed_imgurl;
+    }
 
+    public void setCompressed_imgurl(String compressed_imgurl) {
+        this.compressed_imgurl = compressed_imgurl;
+    }
 }

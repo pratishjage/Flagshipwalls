@@ -28,7 +28,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class WallpaperActivity extends AppCompatActivity implements IWallpaperActivity {
+public class WallpaperActivity extends AppCompatActivity implements IWallpaperActivity, WallpaperListner {
 
 
     private ArrayList<String> mfragmentTags = new ArrayList<>();
@@ -229,15 +229,16 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
     }
 
     @Override
-    public void showWallpaperDialog(String wallurl) {
-        BottomSheetFragment bottomSheetFragment = new BottomSheetFragment();
+    public void showWallpaperDialog(String wallurl, String downloadurl) {
+        BottomSheetFragment bottomSheetFragment = new BottomSheetFragment(this);
         Bundle bundle=new Bundle();
         bundle.putString(AppConstants.WALLURL,wallurl);
+        bundle.putString(AppConstants.DOWNLOAD_URL,downloadurl);
         bottomSheetFragment.setArguments(bundle);
         bottomSheetFragment.show(getSupportFragmentManager(),"bottom");
-
-
     }
+
+
 
     private void hideBottomNavigation() {
         if (navigation != null) {
@@ -271,4 +272,13 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         backArrow.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onWallpaperSet(String imgurl) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(),"Wallpaper Set",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

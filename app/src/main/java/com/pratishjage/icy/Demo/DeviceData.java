@@ -28,6 +28,15 @@ public class DeviceData {
 
     String platform_name;
 
+    String  platform_logo_url;
+
+    public String getPlatform_logo_url() {
+        return platform_logo_url;
+    }
+
+    public void setPlatform_logo_url(String platform_logo_url) {
+        this.platform_logo_url = platform_logo_url;
+    }
 
     public Date getDevice_release_date() {
         return device_release_date;

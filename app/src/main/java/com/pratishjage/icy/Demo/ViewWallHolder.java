@@ -22,22 +22,5 @@ class ViewWallHolder extends RecyclerView.ViewHolder {
         wallpaperImg = itemView.findViewById(R.id.wallpaper_img);
         overlayLayout = itemView.findViewById(R.id.overlay_layout);
         setwallpaper_btn = itemView.findViewById(R.id.setwallpaper_btn);
-
-        wallpaperImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //  selectedWallpaperPostion = getAdapterPosition();
-                //  notifyDataSetChanged();
-
-            }
-        });
-        overlayLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //  selectedWallpaperPostion = -1;
-                // notifyDataSetChanged();
-            }
-        });
     }
 }
