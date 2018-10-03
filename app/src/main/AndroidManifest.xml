@@ -12,6 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:name="com.flagshipwalls.app.MyApp"
+        android:largeHeap="true"
         android:supportsRtl="true">
         <activity
             android:name="com.flagshipwalls.app.WallpaperActivity"

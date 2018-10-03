@@ -5,59 +5,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/wallpaper_img"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        app:placeholderImage="@drawable/placeholder"
-
-       />
+        android:background="@drawable/placeholder"
+        android:scaleType="fitXY" />
     <!--   android:background="@drawable/placeholder"
 
            app:retryImage="@drawable/ic_refresh_black_24dp"
             app:failureImage="@drawable/ic_broken_image_black_24dp"-->
-    <RelativeLayout
-        android:id="@+id/overlay_layout"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@color/white_overlay"
-        android:visibility="gone"
-      >
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/setwallpaper_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/black_overlay"
-            android:text="set as wallpaper"
-            android:textColor="@color/white"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-            app:icon="@drawable/ic_devices_black_24dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            app:iconSize="15dp"
-            android:fontFamily="@font/custom_font"
-            android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp"
-            />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/download_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/black_overlay"
-            android:text="Download"
-            android:layout_above="@+id/setwallpaper_btn"
-            android:visibility="gone"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/white"
-            android:fontFamily="@font/custom_font"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-            app:icon="@drawable/ic_file_download_black_24dp"
-            app:iconSize="15dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="16dp"
-            />
-    </RelativeLayout>
 
 </FrameLayout>

@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.firebase.ui.firestore.paging.LoadingState;
@@ -22,7 +24,7 @@ public class Walladp extends FirestorePagingAdapter<WallpaperData, ViewWallHolde
     private IWallpaperActivity inteface;
     Context context;
     LoadingListner loadingListner;
-
+RequestOptions requestOptions;
 
     public Walladp(@NonNull FirestorePagingOptions<WallpaperData> options, Context context) {
         super(options);
@@ -33,17 +35,27 @@ public class Walladp extends FirestorePagingAdapter<WallpaperData, ViewWallHolde
         super(options);
         this.context = context;
         this.loadingListner = loadingListner;
+        requestOptions=  new RequestOptions().placeholder(R.drawable.placeholder).error(R.drawable.ic_broken_image_black_24dp);
     }
 
     @Override
     protected void onBindViewHolder(@NonNull ViewWallHolder viewWallHolder, int i, @NonNull final WallpaperData wallpaperData) {
-        viewWallHolder.wallpaperImg.setImageURI(wallpaperData.getCompressed_imgurl());
+      //  viewWallHolder.wallpaperImg.setImageURI(wallpaperData.getCompressed_imgurl());
                          /*holder.wallpaperImg.setController(
                                Fresco.newDraweeControllerBuilder()
                                         .setTapToRetryEnabled(true)
                                         .setUri(wallpaperData.getImgurl())
                                         .build());
 */
+
+      /*  Glide.with(context).
+                load(wallpaperData.getCompressed_imgurl()).into(viewWallHolder.wallpaperImg);
+*/
+        Glide.with(context)
+                .load(wallpaperData.getCompressed_imgurl())
+                .apply(requestOptions)
+                .into(viewWallHolder.wallpaperImg);
+
         viewWallHolder.wallpaperImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,9 +98,7 @@ public class Walladp extends FirestorePagingAdapter<WallpaperData, ViewWallHolde
 
                 Log.d("LOADING", "FINISHED");
                 if (loadingListner != null) {
-
-                        loadingListner.onLoadingFinished();
-
+                    loadingListner.onLoadingFinished();
                 }
                 break;
 

@@ -28,11 +28,12 @@
         android:layout_marginTop="4dp"
         android:orientation="horizontal">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/os_logo"
             android:layout_width="13dp"
             android:layout_height="13dp"
             android:layout_gravity="center_vertical"
+            android:scaleType="fitXY"
            />
 
         <TextView

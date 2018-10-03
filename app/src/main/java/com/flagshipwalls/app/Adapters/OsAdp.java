@@ -4,15 +4,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
-import com.flagshipwalls.app.interfaces.IWallpaperActivity;
-import com.flagshipwalls.app.beans.OSData;
 import com.flagshipwalls.app.R;
+import com.flagshipwalls.app.beans.OSData;
+import com.flagshipwalls.app.interfaces.IWallpaperActivity;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -25,16 +27,23 @@ public class OsAdp extends FirestorePagingAdapter<OSData,OsAdp.OSHolder> {
 
     private IWallpaperActivity inteface;
     Context context;
+    RequestOptions requestOptions;
     public OsAdp(@NonNull FirestorePagingOptions<OSData> options,Context context) {
         super(options);
         this.context=context;
+        requestOptions=  new RequestOptions().placeholder(R.drawable.placeholder).error(R.drawable.ic_broken_image_black_24dp);
+
     }
 
     @Override
     protected void onBindViewHolder(@NonNull OSHolder holder, final int position, @NonNull final OSData osData) {
         holder.mainLayout.setBackgroundColor(getBgColor(position));
         holder.osNameText.setText(osData.getName());
-        holder.osLogo.setImageURI(osData.getPlatform_logo_url());
+        Glide.with(context)
+                .load(osData.getPlatform_logo_url())
+                .apply(requestOptions)
+                .into(holder.osLogo);
+
         holder.releseDateTxt.setText(" · " + getYearforDate(osData.getRelease_date()));
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +70,7 @@ public class OsAdp extends FirestorePagingAdapter<OSData,OsAdp.OSHolder> {
     public class OSHolder extends RecyclerView.ViewHolder {
         private RelativeLayout mainLayout;
         private TextView osNameText;
-        private SimpleDraweeView osLogo;
+        private ImageView osLogo;
         private TextView releseDateTxt;
 
         public OSHolder(@NonNull View itemView) {

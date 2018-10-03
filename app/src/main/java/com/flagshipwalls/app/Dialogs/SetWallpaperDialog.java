@@ -12,17 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
-import com.facebook.common.executors.CallerThreadExecutor;
-import com.facebook.common.references.CloseableReference;
-import com.facebook.datasource.DataSource;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.core.ImagePipeline;
-import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
-import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.flagshipwalls.app.utils.AppConstants;
 import com.flagshipwalls.app.interfaces.WallpaperListner;
@@ -39,17 +36,19 @@ public class SetWallpaperDialog extends BottomSheetDialogFragment {
     }
 
     WallpaperListner listner;
-
+    RequestOptions requestOptions;
     @SuppressLint("ValidFragment")
     public SetWallpaperDialog(WallpaperListner listner) {
         this.listner = listner;
+        requestOptions = new RequestOptions().placeholder(R.drawable.placeholder).error(R.drawable.ic_broken_image_black_24dp);
+
     }
 
     String wallurl, downloadurl;
-    SimpleDraweeView wallimg;
+    ImageView wallimg;
     private ProgressDialog progressDialog;
     Context context;
-
+    WallpaperManager myWallpaperManager;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,82 +64,55 @@ public class SetWallpaperDialog extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        context=getContext();
         wallurl = getArguments().getString(AppConstants.WALLURL);
         downloadurl = getArguments().getString(AppConstants.DOWNLOAD_URL);
         wallimg = view.findViewById(R.id.wallpaper_img);
-        wallimg.setImageURI(wallurl);
-        context = getContext();
+        //wallimg.setImageURI(wallurl);
+        Glide.with(context)
+                .load(wallurl)
+                .apply(requestOptions)
+                .into(wallimg);
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Setting Wallpaper");
 
         view.findViewById(R.id.setwallpaper_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new WallAsync().execute(downloadurl);
+               // new WallAsync().execute(downloadurl);
+                progressDialog.show();
+                myWallpaperManager
+                        = WallpaperManager.getInstance(context);
+                Glide.with(getContext().getApplicationContext())
+                        .asBitmap().
+                        load(wallurl)
+                        .listener(new RequestListener<Bitmap>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                                return false;
+                            }
+
+
+
+                            @Override
+                            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                                // resource is your loaded Bitmap
+                                try {
+                                    myWallpaperManager.setBitmap(Bitmap.createBitmap(resource));
+                                } catch (IOException e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
+                                progressDialog.dismiss();
+                                listner.onWallpaperSet("");
+                                getDialog().dismiss();
+                                return true;
+                            }
+                        }).submit();
             }
         });
     }
 
-    private class WallAsync extends AsyncTask<String, Void, String> {
-        public WallAsync() {
-            progressDialog = new ProgressDialog(context);
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage("Setting Wallpaper");
-            progressDialog.show();
-        }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            return strings[0];
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            Uri uri = Uri.parse(s);
-            final WallpaperManager myWallpaperManager
-                    = WallpaperManager.getInstance(context);
-
-            ImageRequest imageRequest = ImageRequestBuilder
-                    .newBuilderWithSource(uri)
-                    .setAutoRotateEnabled(true)
-                    .build();
-
-            ImagePipeline imagePipeline = Fresco.getImagePipeline();
-            final DataSource<CloseableReference<CloseableImage>>
-                    dataSource = imagePipeline.fetchDecodedImage(imageRequest, this);
-
-            dataSource.subscribe(new BaseBitmapDataSubscriber() {
-
-                @Override
-                public void onNewResultImpl(@Nullable Bitmap bitmap) {
-                    if (dataSource.isFinished() && bitmap != null) {
-                        Log.d("Bitmap", "has come");
-                        try {
-                            myWallpaperManager.setBitmap(Bitmap.createBitmap(bitmap));
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                        // Toast.makeText(mContext, "Wallpaper set", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
-                        listner.onWallpaperSet("");
-                        getDialog().dismiss();
-                        dataSource.close();
-                    }
-                }
-
-                @Override
-                public void onFailureImpl(DataSource dataSource) {
-                    if (dataSource != null) {
-                        dataSource.close();
-                    }
-                }
-            }, CallerThreadExecutor.getInstance());
-        }
-    }
 }

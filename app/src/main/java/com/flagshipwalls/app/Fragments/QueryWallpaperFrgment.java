@@ -23,6 +23,7 @@ import java.util.List;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.paging.PagedList;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -74,8 +75,8 @@ public class QueryWallpaperFrgment extends Fragment implements LoadingListner {
         recyclerview = view.findViewById(R.id.recyclerview);
         progressBar = view.findViewById(R.id.progressbar);
         emptyLayout = view.findViewById(R.id.emptylayout);
-        wallpaperDataList = new ArrayList<>();
-        recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         baseQuery = db.collection("debug_wallpaper").
                 whereEqualTo(mWhereTag, mWhereValue)
@@ -102,6 +103,8 @@ public class QueryWallpaperFrgment extends Fragment implements LoadingListner {
             progressBar.setVisibility(View.GONE);
             emptyLayout.setVisibility(View.VISIBLE);
             recyclerview.setVisibility(View.GONE);
+        }else if (adapter.getItemCount() > 0) {
+            progressBar.setVisibility(View.GONE);
         }
     }
 

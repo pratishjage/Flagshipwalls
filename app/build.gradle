@@ -49,10 +49,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
     implementation 'com.google.firebase:firebase-firestore:17.0.4'
     implementation 'com.google.android.gms:play-services-ads:15.0.0'
-    implementation 'com.facebook.fresco:fresco:1.10.0'
     implementation 'com.google.android.material:material:1.0.0-beta01'
     def paging_version = "1.0.0"
 
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     implementation "android.arch.paging:runtime:$paging_version"
     implementation 'com.firebaseui:firebase-ui-firestore:4.1.0'
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {

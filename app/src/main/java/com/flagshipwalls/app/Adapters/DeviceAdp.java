@@ -4,9 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 
@@ -24,10 +27,12 @@ import androidx.recyclerview.widget.RecyclerView;
 public class DeviceAdp extends FirestorePagingAdapter<DeviceData, DeviceAdp.DeviceHolder> {
     private IWallpaperActivity mInterface;
     Context context;
+    RequestOptions requestOptions;
 
     public DeviceAdp(@NonNull FirestorePagingOptions<DeviceData> options, Context context) {
         super(options);
         this.context = context;
+        requestOptions = new RequestOptions().placeholder(R.drawable.placeholder).error(R.drawable.ic_broken_image_black_24dp);
     }
 
     @Override
@@ -35,7 +40,10 @@ public class DeviceAdp extends FirestorePagingAdapter<DeviceData, DeviceAdp.Devi
         holder.deviceNameTxt.setText(deviceData.getDeviceName());
         holder.osNameTxt.setText(deviceData.getOsName());
         holder.deviceReleaseDateTxt.setText(getYearforDate(deviceData.getDevice_release_date()));
-        holder.osLogoImg.setImageURI(deviceData.getPlatform_logo_url());
+        Glide.with(context)
+                .load(deviceData.getPlatform_logo_url())
+                .apply(requestOptions)
+                .into(holder.osLogoImg);
         holder.maindeviceLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,7 +67,7 @@ public class DeviceAdp extends FirestorePagingAdapter<DeviceData, DeviceAdp.Devi
 
     public class DeviceHolder extends RecyclerView.ViewHolder {
         private TextView deviceNameTxt, osNameTxt, deviceReleaseDateTxt;
-        private SimpleDraweeView osLogoImg;
+        private ImageView osLogoImg;
         private ConstraintLayout maindeviceLayout;
 
         public DeviceHolder(@NonNull View itemView) {

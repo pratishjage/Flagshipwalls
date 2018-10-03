@@ -5,24 +5,26 @@
     android:layout_height="400dp"
     android:orientation="vertical">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/wallpaper_img"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        app:placeholderImage="@drawable/placeholder" />
+        android:background="@drawable/placeholder"
+
+        android:scaleType="centerCrop" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/setwallpaper_btn"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
-        android:id="@+id/setwallpaper_btn"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="4dp"
         android:fontFamily="@font/custom_font"
         android:text="Set As Wallpaper"
-        app:strokeColor="@color/black"
-        app:strokeWidth="1dp"
-        app:cornerRadius="2dp"
+        android:textColor="@color/white"
         app:backgroundTint="@color/black_overlay"
-        android:textColor="@color/white" />
+        app:cornerRadius="2dp"
+        app:strokeColor="@color/black"
+        app:strokeWidth="1dp" />
 </FrameLayout>
