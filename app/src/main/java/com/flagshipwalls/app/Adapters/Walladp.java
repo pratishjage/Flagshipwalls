@@ -94,6 +94,12 @@ RequestOptions requestOptions;
                 Log.d("LOADING", "LOADED");
                 break;
 
+
+            case ERROR:
+                //previous load (either initial or additional) failed.  Call the retry() method to retry load.
+                Log.d("LOADING", "LOADING error ");
+
+                break;
             case FINISHED:
 
                 Log.d("LOADING", "FINISHED");
@@ -102,14 +108,12 @@ RequestOptions requestOptions;
                 }
                 break;
 
-            case ERROR:
-                //previous load (either initial or additional) failed.  Call the retry() method to retry load.
-                Log.d("LOADING", "LOADING error ");
-
-                break;
-
         }
+
     }
+
+
+
 
 
 

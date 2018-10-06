@@ -55,7 +55,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     implementation "android.arch.paging:runtime:$paging_version"
-    implementation 'com.firebaseui:firebase-ui-firestore:4.1.0'
+    implementation 'com.firebaseui:firebase-ui-firestore:4.2.0'
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true;
     }

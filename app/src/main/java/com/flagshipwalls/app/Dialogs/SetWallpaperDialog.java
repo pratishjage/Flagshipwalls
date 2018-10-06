@@ -1,14 +1,19 @@
 package com.flagshipwalls.app.Dialogs;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +25,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.flagshipwalls.app.utils.AppConstants;
 import com.flagshipwalls.app.interfaces.WallpaperListner;
@@ -37,6 +43,7 @@ public class SetWallpaperDialog extends BottomSheetDialogFragment {
 
     WallpaperListner listner;
     RequestOptions requestOptions;
+
     @SuppressLint("ValidFragment")
     public SetWallpaperDialog(WallpaperListner listner) {
         this.listner = listner;
@@ -49,6 +56,7 @@ public class SetWallpaperDialog extends BottomSheetDialogFragment {
     private ProgressDialog progressDialog;
     Context context;
     WallpaperManager myWallpaperManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,10 +69,12 @@ public class SetWallpaperDialog extends BottomSheetDialogFragment {
         return inflater.inflate(R.layout.setwallpaper_bottom_sheet_dialog, container, false);
     }
 
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        context=getContext();
+        context = getContext();
         wallurl = getArguments().getString(AppConstants.WALLURL);
         downloadurl = getArguments().getString(AppConstants.DOWNLOAD_URL);
         wallimg = view.findViewById(R.id.wallpaper_img);
@@ -80,7 +90,7 @@ public class SetWallpaperDialog extends BottomSheetDialogFragment {
         view.findViewById(R.id.setwallpaper_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // new WallAsync().execute(downloadurl);
+                // new WallAsync().execute(downloadurl);
                 progressDialog.show();
                 myWallpaperManager
                         = WallpaperManager.getInstance(context);
@@ -92,7 +102,6 @@ public class SetWallpaperDialog extends BottomSheetDialogFragment {
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
                                 return false;
                             }
-
 
 
                             @Override

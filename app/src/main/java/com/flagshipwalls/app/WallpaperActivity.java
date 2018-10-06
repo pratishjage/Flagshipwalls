@@ -1,9 +1,12 @@
 package com.flagshipwalls.app;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import com.flagshipwalls.app.Dialogs.BottomSheetFragment;
+import com.flagshipwalls.app.Dialogs.DialogFragments;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -17,6 +20,7 @@ import com.flagshipwalls.app.interfaces.IWallpaperActivity;
 import com.flagshipwalls.app.interfaces.WallpaperListner;
 import com.flagshipwalls.app.utils.FragmentTag;
 import com.flagshipwalls.app.utils.AppConstants;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -251,12 +255,19 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
 
     @Override
     public void showWallpaperDialog(String wallurl, String downloadurl) {
-        SetWallpaperDialog setWallpaperDialog = new SetWallpaperDialog(this);
+      /*  SetWallpaperDialog setWallpaperDialog = new SetWallpaperDialog(this);
         Bundle bundle = new Bundle();
         bundle.putString(AppConstants.WALLURL, wallurl);
         bundle.putString(AppConstants.DOWNLOAD_URL, downloadurl);
         setWallpaperDialog.setArguments(bundle);
-        setWallpaperDialog.show(getSupportFragmentManager(), "bottom");
+        setWallpaperDialog.show(getSupportFragmentManager(), "bottom");*/
+/*
+        FragmentManager fm = getFragmentManager();
+        DialogFragments dialogFragment = new DialogFragments();
+        dialogFragment.show(getSupportFragmentManager(), "Bottomsheet Fragment");*/
+
+        BottomSheetFragment fragment=new BottomSheetFragment();
+        fragment.show(getSupportFragmentManager(), "Bottomsheet Fragment");
     }
 
 
