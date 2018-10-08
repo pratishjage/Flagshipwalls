@@ -16,7 +16,7 @@
 
         android:textAllCaps="true"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -30,8 +30,8 @@
 
         <ImageView
             android:id="@+id/os_logo"
-            android:layout_width="13dp"
-            android:layout_height="13dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:scaleType="fitXY"
            />
@@ -43,7 +43,7 @@
             android:layout_gravity="center_vertical"
 
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 </RelativeLayout>

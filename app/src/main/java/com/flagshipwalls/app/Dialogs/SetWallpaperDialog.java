@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -70,7 +71,6 @@ public class SetWallpaperDialog extends BottomSheetDialogFragment {
     }
 
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -90,35 +90,39 @@ public class SetWallpaperDialog extends BottomSheetDialogFragment {
         view.findViewById(R.id.setwallpaper_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // new WallAsync().execute(downloadurl);
-                progressDialog.show();
-                myWallpaperManager
-                        = WallpaperManager.getInstance(context);
-                Glide.with(getContext().getApplicationContext())
-                        .asBitmap().
-                        load(wallurl)
-                        .listener(new RequestListener<Bitmap>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                return false;
-                            }
-
-
-                            @Override
-                            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                // resource is your loaded Bitmap
-                                try {
-                                    myWallpaperManager.setBitmap(Bitmap.createBitmap(resource));
-                                } catch (IOException e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
+                if (AppConstants.isNetworkAvailable(context)) {
+                    progressDialog.show();
+                    myWallpaperManager
+                            = WallpaperManager.getInstance(context);
+                    Glide.with(getContext().getApplicationContext())
+                            .asBitmap().
+                            load(wallurl)
+                            .listener(new RequestListener<Bitmap>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                                    return false;
                                 }
-                                progressDialog.dismiss();
-                                listner.onWallpaperSet("");
-                                getDialog().dismiss();
-                                return true;
-                            }
-                        }).submit();
+
+
+                                @Override
+                                public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                                    // resource is your loaded Bitmap
+                                    try {
+                                        myWallpaperManager.setBitmap(Bitmap.createBitmap(resource));
+                                    } catch (IOException e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    }
+                                    progressDialog.dismiss();
+                                    listner.onWallpaperSet("");
+                                    getDialog().dismiss();
+                                    return true;
+                                }
+                            }).submit();
+                }else {
+                    Toast.makeText(context, "Please Check Your Internet Connection", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

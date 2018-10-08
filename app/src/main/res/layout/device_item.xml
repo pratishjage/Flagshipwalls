@@ -5,7 +5,7 @@
     android:id="@+id/main_device_item"
     android:layout_width="match_parent"
     android:layout_height="150dp"
-    android:background="@color/dark_grey30"
+    android:background="@color/google_grey_bg"
     android:orientation="vertical">
 
 
@@ -21,7 +21,7 @@
         android:layout_marginBottom="8dp"
         android:fontFamily="@font/custom_font"
         android:text="Google Pixel 2"
-        android:textColor="@color/red"
+        android:textColor="@color/google_black_txt"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -40,8 +40,8 @@
         android:fontFamily="@font/custom_font"
         android:text="2018"
 
-        android:textColor="@color/blue_grey"
-        android:textSize="12sp"
+        android:textColor="@color/google_grey_txt"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/device_name_txt"
         app:layout_constraintHorizontal_bias="0.505"
@@ -79,8 +79,8 @@
         android:text="Oreo"
         android:textAllCaps="true"
 
-        android:textColor="@color/blue_grey"
-        android:textSize="12sp"
+        android:textColor="@color/google_grey_txt"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -90,7 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
-        android:background="@color/blue_grey"
+        android:background="@color/grey_100"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -16,9 +16,13 @@
     <color name="red">#f00807</color>
     <color name="dark_grey30">#5f6273</color>
     <color name="black">#000000</color>
+    <color name="dark_blue">#00182E</color>
 
     <color name="white_overlay">#d0edede4</color>
     <color name="black_overlay">#3f000000</color>
+    <color name="google_grey_bg">#eff3f4</color>
+    <color name="google_grey_txt">#7e868a</color>
+    <color name="google_black_txt">#403F3F</color>
     <!-- <color name="grey_100">#86708c</color>
     <color name="grey_200">#676b73</color>
     <color name="grey_300">#898180</color>

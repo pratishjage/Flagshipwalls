@@ -19,14 +19,14 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
-   <!-- <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <!-- <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
     <string name="ad_unit_id">ca-app-pub-3940256099942544/8135179316</string>
 
 -->
     <!--<string name="admob_app_id">ca-app-pub-3984559846472825~2334303278</string>
     <string name="ad_unit_id">ca-app-pub-3940256099942544/2247696110</string>
 -->
-//new Wallp
+    //new Wallp
     <string name="admob_app_id">ca-app-pub-3984559846472825~2334303278</string>
     <string name="ad_unit_id">ca-app-pub-3984559846472825/9962628812</string>
 

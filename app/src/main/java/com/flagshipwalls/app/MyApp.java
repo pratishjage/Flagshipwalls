@@ -11,7 +11,6 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
-
         MobileAds.initialize(this, getString(R.string.admob_app_id));
     }
 }

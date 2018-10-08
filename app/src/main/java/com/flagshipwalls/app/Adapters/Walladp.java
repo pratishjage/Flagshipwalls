@@ -97,8 +97,7 @@ RequestOptions requestOptions;
 
             case ERROR:
                 //previous load (either initial or additional) failed.  Call the retry() method to retry load.
-                Log.d("LOADING", "LOADING error ");
-
+                Log.e("LOADING", "LOADING error ");
                 break;
             case FINISHED:
 
