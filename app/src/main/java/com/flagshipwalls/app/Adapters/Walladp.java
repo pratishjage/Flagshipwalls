@@ -35,7 +35,7 @@ RequestOptions requestOptions;
         super(options);
         this.context = context;
         this.loadingListner = loadingListner;
-        requestOptions=  new RequestOptions().placeholder(R.drawable.placeholder).error(R.drawable.ic_broken_image_black_24dp);
+        requestOptions=  new RequestOptions().placeholder(R.drawable.placeholder).error(R.drawable.ic_broken_image_black_24dp).centerCrop();
     }
 
     @Override
@@ -91,7 +91,7 @@ RequestOptions requestOptions;
                 break;
             case LOADED:
 
-                Log.d("LOADING", "LOADED");
+                Log.d("c", "LOADED");
                 break;
 
 

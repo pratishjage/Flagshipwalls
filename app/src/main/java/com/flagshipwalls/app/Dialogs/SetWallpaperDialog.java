@@ -48,7 +48,7 @@ public class SetWallpaperDialog extends BottomSheetDialogFragment {
     @SuppressLint("ValidFragment")
     public SetWallpaperDialog(WallpaperListner listner) {
         this.listner = listner;
-        requestOptions = new RequestOptions().placeholder(R.drawable.placeholder).error(R.drawable.ic_broken_image_black_24dp);
+        requestOptions = new RequestOptions().placeholder(R.drawable.placeholder).error(R.drawable.ic_broken_image_black_24dp).centerCrop();
 
     }
 

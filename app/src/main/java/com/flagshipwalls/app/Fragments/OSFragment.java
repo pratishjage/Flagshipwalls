@@ -6,10 +6,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.flagshipwalls.app.utils.AppConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -30,7 +34,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class OSFragment extends Fragment {
+public class OSFragment extends Fragment implements View.OnClickListener {
 
     RecyclerView os_recycler;
     List<OSData> osDataList;
@@ -38,7 +42,9 @@ public class OSFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String TAG = getClass().getSimpleName();
     ContentLoadingProgressBar progressbar;
-
+    LinearLayout noConnectionLayout;
+    MaterialButton retryBtn;
+    TextView noConnectionTxt;
     public OSFragment() {
         // Required empty public constructor
     }
@@ -70,14 +76,34 @@ public class OSFragment extends Fragment {
         os_recycler = view.findViewById(R.id.os_recycler);
         os_recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         progressbar = view.findViewById(R.id.progressbar);
+        noConnectionLayout = view.findViewById(R.id.no_connection_layout);
+        retryBtn = view.findViewById(R.id.retry_btn);
+        noConnectionTxt = view.findViewById(R.id.no_coonection_msg_txt);
         context = getContext();
 
+        if (AppConstants.isNetworkAvailable(getContext())) {
+            getOSList();
+        } else {
+            os_recycler.setVisibility(View.GONE);
+            progressbar.setVisibility(View.GONE);
+            noConnectionLayout.setVisibility(View.VISIBLE);
+            retryBtn.setOnClickListener(this);
 
+        }
+
+
+
+    }
+
+    private void getOSList() {
+        os_recycler.setVisibility(View.VISIBLE);
+        progressbar.setVisibility(View.VISIBLE);
+        noConnectionLayout.setVisibility(View.GONE);
         Query baseQuery =  db.collection("os").orderBy("release_date", Query.Direction.DESCENDING);
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
-                .setPrefetchDistance(4)
-                .setPageSize(5)
+                .setPrefetchDistance(8)
+                .setPageSize(16)
                 .build();
 
         FirestorePagingOptions<OSData> options = new FirestorePagingOptions.Builder<OSData>()
@@ -86,29 +112,22 @@ public class OSFragment extends Fragment {
                 .build();
         osAdapter = new OsAdp(options, getContext());
         os_recycler.setAdapter(osAdapter);
-
-       // getOS();
     }
 
-    public void getOS() {
-        progressbar.show();
-        db.collection("os").orderBy("release_date", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                osDataList.add(document.toObject(OSData.class));
-                            }
-                            progressbar.hide();
-                            osAdapter.notifyDataSetChanged();
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
 
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.retry_btn) {
+            if (AppConstants.isNetworkAvailable(getContext())) {
+                getOSList();
+            } else {
+                noConnectionTxt.setVisibility(View.INVISIBLE);
+                noConnectionTxt.postDelayed(new Runnable() {
+                    public void run() {
+                        noConnectionTxt.setVisibility(View.VISIBLE);
+                    }
+                }, 300);
+            }
+        }
     }
 }

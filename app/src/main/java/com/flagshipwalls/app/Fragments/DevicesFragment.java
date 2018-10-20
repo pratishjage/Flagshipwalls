@@ -6,10 +6,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.flagshipwalls.app.utils.AppConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -29,7 +33,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class DevicesFragment extends Fragment {
+public class DevicesFragment extends Fragment implements View.OnClickListener {
 
 
     RecyclerView recyclerView;
@@ -40,7 +44,9 @@ public class DevicesFragment extends Fragment {
     DeviceAdp deviceAdapter;
     ContentLoadingProgressBar progressbar;
     private Query baseQuery;
-
+    LinearLayout noConnectionLayout;
+    MaterialButton retryBtn;
+    TextView noConnectionTxt;
     public DevicesFragment() {
         // Required empty public constructor
     }
@@ -76,14 +82,34 @@ public class DevicesFragment extends Fragment {
         progressbar = view.findViewById(R.id.progressbar);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        noConnectionLayout = view.findViewById(R.id.no_connection_layout);
+        retryBtn = view.findViewById(R.id.retry_btn);
+        noConnectionTxt = view.findViewById(R.id.no_coonection_msg_txt);
 
 
+
+        if (AppConstants.isNetworkAvailable(getContext())) {
+            getListOfDevices();
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            progressbar.setVisibility(View.GONE);
+            noConnectionLayout.setVisibility(View.VISIBLE);
+            retryBtn.setOnClickListener(this);
+
+        }
+
+    }
+
+    private void getListOfDevices() {
+        recyclerView.setVisibility(View.VISIBLE);
+        progressbar.setVisibility(View.VISIBLE);
+        noConnectionLayout.setVisibility(View.GONE);
         baseQuery = db.collection("devices").orderBy("device_release_date", Query.Direction.DESCENDING);
 
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
-                .setPrefetchDistance(4)
-                .setPageSize(5)
+                .setPrefetchDistance(8)
+                .setPageSize(16)
                 .build();
 
         FirestorePagingOptions<DeviceData> options = new FirestorePagingOptions.Builder<DeviceData>()
@@ -92,28 +118,21 @@ public class DevicesFragment extends Fragment {
                 .build();
         deviceAdapter = new DeviceAdp(options, getContext());
         recyclerView.setAdapter(deviceAdapter);
-        //getDevices();
     }
 
-    public void getDevices() {
-        progressbar.show();
-        db.collection("devices").orderBy("device_release_date", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                deviceDataList.add(document.toObject(DeviceData.class));
-                            }
-                            progressbar.hide();
-                            deviceAdapter.notifyDataSetChanged();
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.retry_btn) {
+            if (AppConstants.isNetworkAvailable(getContext())) {
+               getListOfDevices();
+            } else {
+                noConnectionTxt.setVisibility(View.INVISIBLE);
+                noConnectionTxt.postDelayed(new Runnable() {
+                    public void run() {
+                        noConnectionTxt.setVisibility(View.VISIBLE);
                     }
-                });
-
+                }, 300);
+            }
+        }
     }
 }

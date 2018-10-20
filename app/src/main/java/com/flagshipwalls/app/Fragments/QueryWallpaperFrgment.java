@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -27,7 +29,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class QueryWallpaperFrgment extends Fragment implements LoadingListner {
+public class QueryWallpaperFrgment extends Fragment implements LoadingListner, View.OnClickListener {
 
 
     private String mWhereTag;
@@ -46,6 +48,10 @@ public class QueryWallpaperFrgment extends Fragment implements LoadingListner {
     LinearLayout emptyLayout;
     private InterstitialAd mInterstitialAd;
     private Query baseQuery;
+    LinearLayout noConnectionLayout;
+    MaterialButton retryBtn;
+    TextView noConnectionTxt;
+
 
     public QueryWallpaperFrgment() {
         // Required empty public constructor
@@ -77,15 +83,34 @@ public class QueryWallpaperFrgment extends Fragment implements LoadingListner {
         emptyLayout = view.findViewById(R.id.emptylayout);
         //recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        noConnectionLayout = view.findViewById(R.id.no_connection_layout);
+        retryBtn = view.findViewById(R.id.retry_btn);
+        noConnectionTxt = view.findViewById(R.id.no_coonection_msg_txt);
+        if (AppConstants.isNetworkAvailable(getContext())) {
+            getWalpapers();
+        } else {
+            emptyLayout.setVisibility(View.GONE);
+            recyclerview.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+            noConnectionLayout.setVisibility(View.VISIBLE);
+            retryBtn.setOnClickListener(this);
 
+        }
+
+    }
+
+    private void getWalpapers() {
+        recyclerview.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        noConnectionLayout.setVisibility(View.GONE);
         baseQuery = db.collection("debug_wallpaper").
                 whereEqualTo(mWhereTag, mWhereValue)
                 .orderBy("release_date", Query.Direction.ASCENDING);
 
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
-                .setPrefetchDistance(4)
-                .setPageSize(5)
+                .setPrefetchDistance(8)
+                .setPageSize(16)
                 .build();
 
         FirestorePagingOptions<WallpaperData> options = new FirestorePagingOptions.Builder<WallpaperData>()
@@ -102,11 +127,28 @@ public class QueryWallpaperFrgment extends Fragment implements LoadingListner {
         if (adapter.getItemCount() == 0) {
             progressBar.setVisibility(View.GONE);
             emptyLayout.setVisibility(View.VISIBLE);
+            noConnectionLayout.setVisibility(View.GONE);
             recyclerview.setVisibility(View.GONE);
-        }else if (adapter.getItemCount() > 0) {
+        } else if (adapter.getItemCount() > 0) {
+            noConnectionLayout.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);
         }
     }
 
 
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.retry_btn) {
+            if (AppConstants.isNetworkAvailable(getContext())) {
+                getWalpapers();
+            } else {
+                noConnectionTxt.setVisibility(View.INVISIBLE);
+                noConnectionTxt.postDelayed(new Runnable() {
+                    public void run() {
+                        noConnectionTxt.setVisibility(View.VISIBLE);
+                    }
+                }, 300);
+            }
+        }
+    }
 }
