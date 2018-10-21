@@ -68,7 +68,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/device/ic_signal_wifi_off_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_all_out_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -79,11 +79,9 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="a5a5a5" />
-                            <entry key="height" value="48" />
-                            <entry key="outputName" value="ic_signal_wifi_off_grey_24dp" />
+                            <entry key="outputName" value="ic_all_out_black_24dp" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="$USER_HOME$/Downloads/windows-8.svg" />
-                            <entry key="width" value="48" />
                           </map>
                         </option>
                       </PersistentState>

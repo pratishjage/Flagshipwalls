@@ -31,7 +31,7 @@ public class OsAdp extends FirestorePagingAdapter<OSData,OsAdp.OSHolder> {
     public OsAdp(@NonNull FirestorePagingOptions<OSData> options,Context context) {
         super(options);
         this.context=context;
-        requestOptions=  new RequestOptions().placeholder(R.drawable.placeholder).error(R.drawable.ic_broken_image_black_24dp);
+        requestOptions=  new RequestOptions().placeholder(R.drawable.ic_all_out_black_24dp).error(R.drawable.ic_all_out_black_24dp);
 
     }
 
