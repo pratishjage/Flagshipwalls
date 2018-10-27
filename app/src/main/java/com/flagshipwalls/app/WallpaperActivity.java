@@ -1,5 +1,7 @@
 package com.flagshipwalls.app;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import com.flagshipwalls.app.interfaces.WallpaperListner;
 import com.flagshipwalls.app.utils.FragmentTag;
 import com.flagshipwalls.app.utils.AppConstants;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -251,12 +254,17 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
 
     @Override
     public void showWallpaperDialog(String wallurl, String downloadurl) {
-        SetWallpaperDialog setWallpaperDialog = new SetWallpaperDialog(this);
+       /* SetWallpaperDialog setWallpaperDialog = new SetWallpaperDialog(this);
         Bundle bundle = new Bundle();
         bundle.putString(AppConstants.WALLURL, wallurl);
         bundle.putString(AppConstants.DOWNLOAD_URL, downloadurl);
         setWallpaperDialog.setArguments(bundle);
-        setWallpaperDialog.show(getSupportFragmentManager(), "bottom");
+        setWallpaperDialog.show(getSupportFragmentManager(), "bottom");*/
+        Intent intent = new Intent(WallpaperActivity.this, SetWallpaperActivity.class);
+        intent.putExtra(AppConstants.WALLURL, wallurl);
+        intent.putExtra(AppConstants.DOWNLOAD_URL, downloadurl);
+        startActivityIfNeeded(intent,111);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 /*
         FragmentManager fm = getFragmentManager();
         DialogFragments dialogFragment = new DialogFragments();
@@ -265,6 +273,22 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
 
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 111) {
+            if (resultCode == Activity.RESULT_OK) {
+                Log.d(TAG, "onActivityResult: Wallpaperset");
+                Toast.makeText(getApplicationContext(), "Wallpaper Set", Toast.LENGTH_SHORT).show();
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
+                    Log.d("TAG", "The interstitial wasn't loaded yet.");
+                }
+            }
+        }
+    }
 
     private void hideBottomNavigation() {
         if (navigation != null) {

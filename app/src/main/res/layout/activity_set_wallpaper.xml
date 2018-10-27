@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SetWallpaperActivity">
+
+    <ImageView
+        android:id="@+id/wallpaper_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/black_overlay">
+
+        <TextView
+            android:id="@+id/setwallpaper_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="16dp"
+            android:text="SET WALLPAPER"
+            android:padding="4dp"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/ic_arrow_back_white_24dp" />
+    </FrameLayout>
+
+
+</FrameLayout>
