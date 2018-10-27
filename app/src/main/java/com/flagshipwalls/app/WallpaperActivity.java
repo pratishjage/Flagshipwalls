@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
-import com.flagshipwalls.app.Dialogs.SetWallpaperDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -16,7 +15,6 @@ import com.flagshipwalls.app.Fragments.HomeFragment;
 import com.flagshipwalls.app.Fragments.OSFragment;
 import com.flagshipwalls.app.Fragments.QueryWallpaperFrgment;
 import com.flagshipwalls.app.interfaces.IWallpaperActivity;
-import com.flagshipwalls.app.interfaces.WallpaperListner;
 import com.flagshipwalls.app.utils.FragmentTag;
 import com.flagshipwalls.app.utils.AppConstants;
 
@@ -35,7 +33,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class WallpaperActivity extends AppCompatActivity implements IWallpaperActivity, WallpaperListner {
+public class WallpaperActivity extends AppCompatActivity implements IWallpaperActivity {
 
 
     private ArrayList<String> mfragmentTags = new ArrayList<>();
@@ -253,22 +251,13 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
     }
 
     @Override
-    public void showWallpaperDialog(String wallurl, String downloadurl) {
-       /* SetWallpaperDialog setWallpaperDialog = new SetWallpaperDialog(this);
-        Bundle bundle = new Bundle();
-        bundle.putString(AppConstants.WALLURL, wallurl);
-        bundle.putString(AppConstants.DOWNLOAD_URL, downloadurl);
-        setWallpaperDialog.setArguments(bundle);
-        setWallpaperDialog.show(getSupportFragmentManager(), "bottom");*/
+    public void showSetWallpaperActivity(String wallurl, String downloadurl) {
+
         Intent intent = new Intent(WallpaperActivity.this, SetWallpaperActivity.class);
         intent.putExtra(AppConstants.WALLURL, wallurl);
         intent.putExtra(AppConstants.DOWNLOAD_URL, downloadurl);
         startActivityIfNeeded(intent,111);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-/*
-        FragmentManager fm = getFragmentManager();
-        DialogFragments dialogFragment = new DialogFragments();
-        dialogFragment.show(getSupportFragmentManager(), "Bottomsheet Fragment");*/
 
 
     }
@@ -322,18 +311,4 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         backArrow.setVisibility(View.GONE);
     }
 
-    @Override
-    public void onWallpaperSet(String imgurl) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), "Wallpaper Set", Toast.LENGTH_SHORT).show();
-                if (mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                } else {
-                    Log.d("TAG", "The interstitial wasn't loaded yet.");
-                }
-            }
-        });
-    }
 }

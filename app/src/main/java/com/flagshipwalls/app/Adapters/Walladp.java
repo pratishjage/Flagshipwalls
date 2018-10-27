@@ -59,7 +59,7 @@ RequestOptions requestOptions;
         viewWallHolder.wallpaperImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inteface.showWallpaperDialog(wallpaperData.getCompressed_imgurl(),wallpaperData.getImgurl());
+                inteface.showSetWallpaperActivity(wallpaperData.getCompressed_imgurl(),wallpaperData.getImgurl());
             }
         });
 
