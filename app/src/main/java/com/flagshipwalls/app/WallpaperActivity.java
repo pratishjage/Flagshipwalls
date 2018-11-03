@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.flagshipwalls.app.Fragments.DevicesFragment;
 import com.flagshipwalls.app.Fragments.HomeFragment;
@@ -17,6 +19,8 @@ import com.flagshipwalls.app.Fragments.QueryWallpaperFrgment;
 import com.flagshipwalls.app.interfaces.IWallpaperActivity;
 import com.flagshipwalls.app.utils.FragmentTag;
 import com.flagshipwalls.app.utils.AppConstants;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -126,10 +130,27 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         logoImageview = view.findViewById(R.id.logo_image);
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
+        getFcmToken();
         init();
         setUpAd();
 
+    }
+
+    private void getFcmToken() {
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+
+                if (!task.isSuccessful()) {
+                    Log.w(TAG, "getInstanceId failed", task.getException());
+                    return;
+                }
+                // Get new Instance ID token
+                String token = task.getResult().getToken();
+                Log.d(TAG, "onCompleteFCM:" + token);
+
+            }
+        });
     }
 
     private void setUpAd() {
@@ -256,7 +277,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         Intent intent = new Intent(WallpaperActivity.this, SetWallpaperActivity.class);
         intent.putExtra(AppConstants.WALLURL, wallurl);
         intent.putExtra(AppConstants.DOWNLOAD_URL, downloadurl);
-        startActivityIfNeeded(intent,111);
+        startActivityIfNeeded(intent, 111);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
 
