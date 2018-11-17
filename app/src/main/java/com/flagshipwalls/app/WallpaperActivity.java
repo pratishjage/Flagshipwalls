@@ -19,6 +19,9 @@ import com.flagshipwalls.app.Fragments.QueryWallpaperFrgment;
 import com.flagshipwalls.app.interfaces.IWallpaperActivity;
 import com.flagshipwalls.app.utils.FragmentTag;
 import com.flagshipwalls.app.utils.AppConstants;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -27,6 +30,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +40,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WallpaperActivity extends AppCompatActivity implements IWallpaperActivity {
 
@@ -52,7 +58,8 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
     TextView headerText;
     String header;
     private InterstitialAd mInterstitialAd;
-
+    FirebaseFirestore db;
+    Map<String, Object> fcmData;
     String TAG = getClass().getSimpleName();
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -130,6 +137,8 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         logoImageview = view.findViewById(R.id.logo_image);
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        fcmData = new HashMap<>();
+        db = FirebaseFirestore.getInstance();
         getFcmToken();
         init();
         setUpAd();
@@ -147,7 +156,19 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
                 }
                 // Get new Instance ID token
                 String token = task.getResult().getToken();
+                String instanceId = task.getResult().getId();
                 Log.d(TAG, "onCompleteFCM:" + token);
+                String android_id = Settings.Secure.getString(getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
+                fcmData.clear();
+                fcmData.put("token", token);
+                fcmData.put("instanceid", instanceId);
+                fcmData.put("deviceid", android_id);
+                fcmData.put("osversion", android.os.Build.VERSION.SDK_INT);
+                fcmData.put("created_at", FieldValue.serverTimestamp());
+
+
+                db.collection("users").document(android_id).set(fcmData, SetOptions.merge());
 
             }
         });
