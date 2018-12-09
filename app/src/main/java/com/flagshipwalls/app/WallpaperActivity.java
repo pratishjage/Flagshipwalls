@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -172,6 +173,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
 
             }
         });
+        FirebaseMessaging.getInstance().subscribeToTopic("updates");
     }
 
     private void setUpAd() {
