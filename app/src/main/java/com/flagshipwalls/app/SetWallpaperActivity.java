@@ -21,6 +21,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.flagshipwalls.app.utils.AppConstants;
 
 import java.io.IOException;
@@ -77,6 +79,7 @@ public class SetWallpaperActivity extends AppCompatActivity {
                                     // resource is your loaded Bitmap
                                     try {
                                         myWallpaperManager.setBitmap(Bitmap.createBitmap(resource));
+                                        Answers.getInstance().logCustom(new CustomEvent("Wallpaper Set"));
                                     } catch (IOException e) {
                                         // TODO Auto-generated catch block
                                         e.printStackTrace();
