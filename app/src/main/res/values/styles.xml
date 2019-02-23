@@ -22,4 +22,6 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fontFamily">@font/custom_font</item>
     </style>
+
+
 </resources>

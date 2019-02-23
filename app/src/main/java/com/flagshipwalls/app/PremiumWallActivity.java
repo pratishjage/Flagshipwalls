@@ -1,40 +1,32 @@
-package com.flagshipwalls.app.Fragments;
+package com.flagshipwalls.app;
 
-import android.annotation.SuppressLint;
-import android.os.Bundle;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.firebase.ui.firestore.paging.FirestorePagingOptions;
-import com.flagshipwalls.app.utils.AppConstants;
-import com.google.android.material.button.MaterialButton;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.flagshipwalls.app.Adapters.Walladp;
-import com.flagshipwalls.app.R;
-import com.flagshipwalls.app.beans.WallpaperData;
-import com.flagshipwalls.app.interfaces.LoadingListner;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ContentLoadingProgressBar;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.paging.PagedList;
-
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-public class  HomeFragment extends Fragment implements LoadingListner, View.OnClickListener {
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.flagshipwalls.app.Adapters.Walladp;
+import com.flagshipwalls.app.Fragments.QueryWallpaperFrgment;
+import com.flagshipwalls.app.beans.WallpaperData;
+import com.flagshipwalls.app.interfaces.IWallpaperActivity;
+import com.flagshipwalls.app.interfaces.LoadingListner;
+import com.flagshipwalls.app.utils.AppConstants;
+import com.flagshipwalls.app.utils.FragmentTag;
+import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
+public class PremiumWallActivity extends AppCompatActivity implements LoadingListner, View.OnClickListener,IWallpaperActivity {
 
     RecyclerView recyclerview;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -46,37 +38,15 @@ public class  HomeFragment extends Fragment implements LoadingListner, View.OnCl
     MaterialButton retryBtn;
     TextView noConnectionTxt;
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
-
-    public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
-    }
-
-
-    @SuppressLint("NewApi")
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        recyclerview = view.findViewById(R.id.recyclerview);
-        progressbar = view.findViewById(R.id.progressbar);
-        noConnectionLayout = view.findViewById(R.id.no_connection_layout);
-        retryBtn = view.findViewById(R.id.retry_btn);
-        noConnectionTxt = view.findViewById(R.id.no_coonection_msg_txt);
+        setContentView(R.layout.activity_premium_wall);
+        recyclerview = findViewById(R.id.recyclerview);
+        progressbar = findViewById(R.id.progressbar);
+        noConnectionLayout = findViewById(R.id.no_connection_layout);
+        retryBtn = findViewById(R.id.retry_btn);
+        noConnectionTxt = findViewById(R.id.no_coonection_msg_txt);
         /*view.findViewById(R.id.sort_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,7 +69,7 @@ public class  HomeFragment extends Fragment implements LoadingListner, View.OnCl
             }
         });*/
         // linearLayoutManager = new LinearLayoutManager(getActivity());
-        if (AppConstants.isNetworkAvailable(getContext())) {
+        if (AppConstants.isNetworkAvailable(this)) {
             setWallpapers();
         } else {
             recyclerview.setVisibility(View.GONE);
@@ -109,9 +79,7 @@ public class  HomeFragment extends Fragment implements LoadingListner, View.OnCl
 
         }
 
-
     }
-
     @Override
     public void onLoadingFinished() {
         progressbar.hide();
@@ -121,10 +89,10 @@ public class  HomeFragment extends Fragment implements LoadingListner, View.OnCl
         recyclerview.setVisibility(View.VISIBLE);
         progressbar.setVisibility(View.VISIBLE);
         noConnectionLayout.setVisibility(View.GONE);
-        recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        recyclerview.setLayoutManager(new GridLayoutManager(this, 2));
 
-        baseQuery = db.collection("debug_wallpaper")
-                .orderBy("release_date", Query.Direction.DESCENDING);
+        baseQuery = db.collection("premiumcollection")
+                .orderBy("created_at", Query.Direction.DESCENDING);
 
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
@@ -137,14 +105,14 @@ public class  HomeFragment extends Fragment implements LoadingListner, View.OnCl
                 .setQuery(baseQuery, config, WallpaperData.class)
                 .build();
 
-        adapter = new Walladp(options, getContext(), this);
+        adapter = new Walladp(options, this, this);
         recyclerview.setAdapter(adapter);
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.retry_btn) {
-            if (AppConstants.isNetworkAvailable(getContext())) {
+            if (AppConstants.isNetworkAvailable(this)) {
                 setWallpapers();
             } else {
                 noConnectionTxt.setVisibility(View.INVISIBLE);
@@ -156,4 +124,39 @@ public class  HomeFragment extends Fragment implements LoadingListner, View.OnCl
             }
         }
     }
+
+
+    @Override
+    public void inflateQueryWallpaperFragment(String whereTag, String whereValue) {
+      /*  header = whereValue;
+        if (queryWallpaperFrgment != null) {
+            getSupportFragmentManager().beginTransaction().remove(queryWallpaperFrgment).commitAllowingStateLoss();
+        }
+        queryWallpaperFrgment = new QueryWallpaperFrgment();
+        Bundle args = new Bundle();
+        args.putString(AppConstants.INTENT_WHERE_TAG, whereTag);
+        args.putString(AppConstants.INTENT_WHERE_VALUE, whereValue);
+        queryWallpaperFrgment.setArguments(args);
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.main_container, queryWallpaperFrgment, getString(R.string.tag_fragment_query_wallpaper));
+        fragmentTransaction.commit();
+        mfragmentTags.add(getString(R.string.tag_fragment_query_wallpaper));
+
+        mFragments.add(new FragmentTag(queryWallpaperFrgment, getString(R.string.tag_fragment_query_wallpaper)));
+        setFragmentVisible(getString(R.string.tag_fragment_query_wallpaper));*/
+    }
+
+    @Override
+    public void showSetWallpaperActivity(String wallurl, String downloadurl) {
+
+        Intent intent = new Intent(PremiumWallActivity.this, SetWallpaperActivity.class);
+        intent.putExtra(AppConstants.WALLURL, wallurl);
+        intent.putExtra(AppConstants.DOWNLOAD_URL, downloadurl);
+        startActivityIfNeeded(intent, 111);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+
+    }
+
 }

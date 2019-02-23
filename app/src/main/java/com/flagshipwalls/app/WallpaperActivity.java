@@ -37,6 +37,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
     private DevicesFragment devicesFragment;
     private QueryWallpaperFrgment queryWallpaperFrgment;
     private ImageView backArrow, logoImageview;
+    private LinearLayout premiumwalllayout;
     TextView headerText;
     String header;
     private InterstitialAd mInterstitialAd;
@@ -129,6 +131,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         View view = getSupportActionBar().getCustomView();
         backArrow = view.findViewById(R.id.back_arrow);
         headerText = view.findViewById(R.id.header_txt);
+        premiumwalllayout=view.findViewById(R.id.premiumwalllayout);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -205,6 +208,12 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
 
         }
         setFragmentVisible(getString(R.string.tag_fragment_home));
+        premiumwalllayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(WallpaperActivity.this,PremiumWallActivity.class));
+            }
+        });
     }
 
     private void setFragmentVisible(String tagName) {
@@ -336,7 +345,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
     }
 
     private void showHeaderInFreagment() {
-        logoImageview.setVisibility(View.GONE);
+        logoImageview.setVisibility(View.VISIBLE);
         headerText.setVisibility(View.VISIBLE);
         Log.d(TAG, "showHeaderInFreagment: " + header);
         headerText.setText(header);
@@ -344,7 +353,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
     }
 
     private void showLogoInFragment() {
-        logoImageview.setVisibility(View.GONE);
+        logoImageview.setVisibility(View.VISIBLE);
         headerText.setVisibility(View.VISIBLE);
         header = "Flagship Walls";
         headerText.setText(header);
