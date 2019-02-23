@@ -38,6 +38,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -212,6 +213,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(WallpaperActivity.this,PremiumWallActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
     }
@@ -350,6 +352,13 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         Log.d(TAG, "showHeaderInFreagment: " + header);
         headerText.setText(header);
         backArrow.setVisibility(View.VISIBLE);
+        premiumwalllayout.setVisibility(View.GONE);
+
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams)headerText.getLayoutParams();
+        layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        headerText.setLayoutParams(layoutParams);
     }
 
     private void showLogoInFragment() {
@@ -362,6 +371,14 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         headerText.setVisibility(View.GONE);
         headerText.setText(header);*/
         backArrow.setVisibility(View.GONE);
+        premiumwalllayout.setVisibility(View.VISIBLE);
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams)headerText.getLayoutParams();
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        headerText.setLayoutParams(layoutParams);
+
+
+
     }
 
 }

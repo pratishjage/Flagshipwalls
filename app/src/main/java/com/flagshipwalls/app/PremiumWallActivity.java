@@ -1,5 +1,6 @@
 package com.flagshipwalls.app;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.FragmentTransaction;
@@ -8,11 +9,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.flagshipwalls.app.Adapters.Walladp;
@@ -47,28 +51,12 @@ public class PremiumWallActivity extends AppCompatActivity implements LoadingLis
         noConnectionLayout = findViewById(R.id.no_connection_layout);
         retryBtn = findViewById(R.id.retry_btn);
         noConnectionTxt = findViewById(R.id.no_coonection_msg_txt);
-        /*view.findViewById(R.id.sort_btn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.back_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adapter=null;
-                baseQuery = db.collection("debug_wallpaper")
-                        .orderBy("release_date", Query.Direction.ASCENDING);
-                PagedList.Config config = new PagedList.Config.Builder()
-                        .setEnablePlaceholders(true)
-                        .setPrefetchDistance(4)
-                        .setPageSize(5)
-                        .build();
-
-                FirestorePagingOptions<WallpaperData> options = new FirestorePagingOptions.Builder<WallpaperData>()
-                        .setLifecycleOwner(getActivity())
-                        .setQuery(baseQuery, config, WallpaperData.class)
-                        .build();
-
-                adapter = new Walladp(options);
-                recyclerview.setAdapter(adapter);
+                onBackPressed();
             }
-        });*/
-        // linearLayoutManager = new LinearLayoutManager(getActivity());
+        });
         if (AppConstants.isNetworkAvailable(this)) {
             setWallpapers();
         } else {
@@ -128,23 +116,7 @@ public class PremiumWallActivity extends AppCompatActivity implements LoadingLis
 
     @Override
     public void inflateQueryWallpaperFragment(String whereTag, String whereValue) {
-      /*  header = whereValue;
-        if (queryWallpaperFrgment != null) {
-            getSupportFragmentManager().beginTransaction().remove(queryWallpaperFrgment).commitAllowingStateLoss();
-        }
-        queryWallpaperFrgment = new QueryWallpaperFrgment();
-        Bundle args = new Bundle();
-        args.putString(AppConstants.INTENT_WHERE_TAG, whereTag);
-        args.putString(AppConstants.INTENT_WHERE_VALUE, whereValue);
-        queryWallpaperFrgment.setArguments(args);
 
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_container, queryWallpaperFrgment, getString(R.string.tag_fragment_query_wallpaper));
-        fragmentTransaction.commit();
-        mfragmentTags.add(getString(R.string.tag_fragment_query_wallpaper));
-
-        mFragments.add(new FragmentTag(queryWallpaperFrgment, getString(R.string.tag_fragment_query_wallpaper)));
-        setFragmentVisible(getString(R.string.tag_fragment_query_wallpaper));*/
     }
 
     @Override
@@ -153,10 +125,16 @@ public class PremiumWallActivity extends AppCompatActivity implements LoadingLis
         Intent intent = new Intent(PremiumWallActivity.this, SetWallpaperActivity.class);
         intent.putExtra(AppConstants.WALLURL, wallurl);
         intent.putExtra(AppConstants.DOWNLOAD_URL, downloadurl);
-        startActivityIfNeeded(intent, 111);
+        startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
 
     }
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
 
 }
