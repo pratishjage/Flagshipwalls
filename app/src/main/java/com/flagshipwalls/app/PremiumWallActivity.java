@@ -1,9 +1,12 @@
 package com.flagshipwalls.app;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -89,7 +92,13 @@ public class PremiumWallActivity extends AppCompatActivity implements LoadingLis
                 .build();
 
         FirestorePagingOptions<WallpaperData> options = new FirestorePagingOptions.Builder<WallpaperData>()
-                .setLifecycleOwner(this)
+                .setLifecycleOwner(new LifecycleOwner() {
+                    @NonNull
+                    @Override
+                    public Lifecycle getLifecycle() {
+                        return null;
+                    }
+                })
                 .setQuery(baseQuery, config, WallpaperData.class)
                 .build();
 

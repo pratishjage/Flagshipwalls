@@ -1,10 +1,14 @@
 package com.flagshipwalls.app.Adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -24,7 +28,7 @@ public class Walladp extends FirestorePagingAdapter<WallpaperData, ViewWallHolde
     private IWallpaperActivity inteface;
     Context context;
     LoadingListner loadingListner;
-RequestOptions requestOptions;
+    RequestOptions requestOptions;
 
     public Walladp(@NonNull FirestorePagingOptions<WallpaperData> options, Context context) {
         super(options);
@@ -35,12 +39,12 @@ RequestOptions requestOptions;
         super(options);
         this.context = context;
         this.loadingListner = loadingListner;
-        requestOptions=  new RequestOptions().placeholder(R.drawable.place).error(R.drawable.broken_img).centerCrop();
+        requestOptions = new RequestOptions().placeholder(R.drawable.place).error(R.drawable.broken_img).centerCrop();
     }
 
     @Override
     protected void onBindViewHolder(@NonNull ViewWallHolder viewWallHolder, int i, @NonNull final WallpaperData wallpaperData) {
-      //  viewWallHolder.wallpaperImg.setImageURI(wallpaperData.getCompressed_imgurl());
+        //  viewWallHolder.wallpaperImg.setImageURI(wallpaperData.getCompressed_imgurl());
                          /*holder.wallpaperImg.setController(
                                Fresco.newDraweeControllerBuilder()
                                         .setTapToRetryEnabled(true)
@@ -51,6 +55,29 @@ RequestOptions requestOptions;
       /*  Glide.with(context).
                 load(wallpaperData.getCompressed_imgurl()).into(viewWallHolder.wallpaperImg);
 */
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) viewWallHolder.wallpaperImg.getLayoutParams();
+        if (i % 3 == 0) {
+//2 colums will be displayed
+
+
+            layoutParams.gravity = Gravity.CENTER;
+            viewWallHolder.wallpaperImg.setLayoutParams(layoutParams);
+            viewWallHolder.wallpaperImg.setPadding(getPX(32), getPX(48), getPX(32), getPX(48));
+        } else {
+            if (i % 2 == 0) {
+                //image will be in bottom
+                //move image to right
+                layoutParams.gravity = Gravity.RIGHT;
+                viewWallHolder.wallpaperImg.setPadding(getPX(32), getPX(32), 0, getPX(16));
+            } else {
+                //image will be in top
+                // move image to left
+                layoutParams.gravity = Gravity.LEFT;
+                viewWallHolder.wallpaperImg.setPadding(0, getPX(32), getPX(16), 0);
+            }
+            viewWallHolder.wallpaperImg.setLayoutParams(layoutParams);
+
+        }
         Glide.with(context)
                 .load(wallpaperData.getCompressed_imgurl())
                 .apply(requestOptions)
@@ -59,7 +86,7 @@ RequestOptions requestOptions;
         viewWallHolder.wallpaperImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                inteface.showSetWallpaperActivity(wallpaperData.getCompressed_imgurl(),wallpaperData.getImgurl());
+                inteface.showSetWallpaperActivity(wallpaperData.getCompressed_imgurl(), wallpaperData.getImgurl());
             }
         });
 
@@ -112,18 +139,25 @@ RequestOptions requestOptions;
     }
 
 
-
-
-
-
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         inteface = (IWallpaperActivity) context;
     }
 
+
     @Override
     public int getItemCount() {
         return super.getItemCount();
+    }
+
+    private int getPX(int dp) {
+        Resources r = context.getResources();
+
+        return (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp,
+                r.getDisplayMetrics()
+        );
     }
 }

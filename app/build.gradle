@@ -8,6 +8,8 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
 repositories {
@@ -15,6 +17,7 @@ repositories {
     maven {
         url "https://maven.google.com"
     }
+    mavenCentral()
 }
 
 apply plugin: 'com.google.gms.google-services'
@@ -25,8 +28,8 @@ android {
         applicationId "com.flagshipwalls.app"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 5
+        versionName "1.0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -35,8 +38,10 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
     }
 }
 
@@ -63,4 +68,6 @@ dependencies {
         transitive = true;
     }
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation "androidx.core:core-ktx:1.0.1"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

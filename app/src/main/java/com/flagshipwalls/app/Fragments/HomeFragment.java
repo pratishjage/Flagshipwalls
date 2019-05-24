@@ -33,7 +33,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class  HomeFragment extends Fragment implements LoadingListner, View.OnClickListener {
+public class HomeFragment extends Fragment implements LoadingListner, View.OnClickListener {
 
 
     RecyclerView recyclerview;
@@ -121,7 +121,17 @@ public class  HomeFragment extends Fragment implements LoadingListner, View.OnCl
         recyclerview.setVisibility(View.VISIBLE);
         progressbar.setVisibility(View.VISIBLE);
         noConnectionLayout.setVisibility(View.GONE);
-        recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.HORIZONTAL, false);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position % 3 == 0) {
+                    return 2;
+                }
+                return 1;
+            }
+        });
+        recyclerview.setLayoutManager(gridLayoutManager);
 
         baseQuery = db.collection("debug_wallpaper")
                 .orderBy("release_date", Query.Direction.DESCENDING);
