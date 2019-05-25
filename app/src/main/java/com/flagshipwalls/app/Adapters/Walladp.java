@@ -22,6 +22,7 @@ import com.flagshipwalls.app.beans.WallpaperData;
 import com.flagshipwalls.app.interfaces.LoadingListner;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class Walladp extends FirestorePagingAdapter<WallpaperData, ViewWallHolder> {
@@ -44,38 +45,29 @@ public class Walladp extends FirestorePagingAdapter<WallpaperData, ViewWallHolde
 
     @Override
     protected void onBindViewHolder(@NonNull ViewWallHolder viewWallHolder, int i, @NonNull final WallpaperData wallpaperData) {
-        //  viewWallHolder.wallpaperImg.setImageURI(wallpaperData.getCompressed_imgurl());
-                         /*holder.wallpaperImg.setController(
-                               Fresco.newDraweeControllerBuilder()
-                                        .setTapToRetryEnabled(true)
-                                        .setUri(wallpaperData.getImgurl())
-                                        .build());
-*/
 
-      /*  Glide.with(context).
-                load(wallpaperData.getCompressed_imgurl()).into(viewWallHolder.wallpaperImg);
-*/
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) viewWallHolder.wallpaperImg.getLayoutParams();
+
+        CardView.LayoutParams layoutParams = (CardView.LayoutParams) viewWallHolder.cardView.getLayoutParams();
         if (i % 3 == 0) {
 //2 colums will be displayed
-
-
-            layoutParams.gravity = Gravity.CENTER;
-            viewWallHolder.wallpaperImg.setLayoutParams(layoutParams);
-            viewWallHolder.wallpaperImg.setPadding(getPX(32), getPX(48), getPX(32), getPX(48));
+            layoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+            layoutParams.setMargins(getPX(8), getPX(128), getPX(8), getPX(80));
+            viewWallHolder.cardView.setLayoutParams(layoutParams);
+            //  viewWallHolder.wallpaperImg.setPadding(getPX(32), getPX(72), getPX(32), getPX(72));
         } else {
             if (i % 2 == 0) {
                 //image will be in bottom
                 //move image to right
-                layoutParams.gravity = Gravity.RIGHT;
-                viewWallHolder.wallpaperImg.setPadding(getPX(32), getPX(32), 0, getPX(16));
+
+                layoutParams.setMargins(getPX(32), getPX(8), getPX(16), getPX(8));
+                //viewWallHolder.wallpaperImg.setPadding(getPX(32), getPX(32), 0, getPX(16));
             } else {
                 //image will be in top
                 // move image to left
-                layoutParams.gravity = Gravity.LEFT;
-                viewWallHolder.wallpaperImg.setPadding(0, getPX(32), getPX(16), 0);
+                layoutParams.setMargins(getPX(16), getPX(8), getPX(32), getPX(8));
+                // viewWallHolder.wallpaperImg.setPadding(0, getPX(32), getPX(16), 0);
             }
-            viewWallHolder.wallpaperImg.setLayoutParams(layoutParams);
+            viewWallHolder.cardView.setLayoutParams(layoutParams);
 
         }
         Glide.with(context)

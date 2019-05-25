@@ -82,7 +82,17 @@ public class QueryWallpaperFrgment extends Fragment implements LoadingListner, V
         progressBar = view.findViewById(R.id.progressbar);
         emptyLayout = view.findViewById(R.id.emptylayout);
         //recyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerview.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.HORIZONTAL, false);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position % 3 == 0) {
+                    return 2;
+                }
+                return 1;
+            }
+        });
+        recyclerview.setLayoutManager(gridLayoutManager);
         noConnectionLayout = view.findViewById(R.id.no_connection_layout);
         retryBtn = view.findViewById(R.id.retry_btn);
         noConnectionTxt = view.findViewById(R.id.no_coonection_msg_txt);

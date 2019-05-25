@@ -80,7 +80,18 @@ public class PremiumWallActivity extends AppCompatActivity implements LoadingLis
         recyclerview.setVisibility(View.VISIBLE);
         progressbar.setVisibility(View.VISIBLE);
         noConnectionLayout.setVisibility(View.GONE);
-        recyclerview.setLayoutManager(new GridLayoutManager(this, 2));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position % 3 == 0) {
+                    return 2;
+                }
+                return 1;
+            }
+        });
+        recyclerview.setLayoutManager(gridLayoutManager);
+      //  recyclerview.setLayoutManager(new GridLayoutManager(this, 2));
 
         baseQuery = db.collection("premiumcollection")
                 .orderBy("created_at", Query.Direction.DESCENDING);
@@ -92,13 +103,7 @@ public class PremiumWallActivity extends AppCompatActivity implements LoadingLis
                 .build();
 
         FirestorePagingOptions<WallpaperData> options = new FirestorePagingOptions.Builder<WallpaperData>()
-                .setLifecycleOwner(new LifecycleOwner() {
-                    @NonNull
-                    @Override
-                    public Lifecycle getLifecycle() {
-                        return null;
-                    }
-                })
+                .setLifecycleOwner(this)
                 .setQuery(baseQuery, config, WallpaperData.class)
                 .build();
 
