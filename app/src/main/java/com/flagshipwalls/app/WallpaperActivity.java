@@ -2,6 +2,8 @@ package com.flagshipwalls.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -143,6 +145,10 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fcmData = new HashMap<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+            getWindow().setNavigationBarColor(Color.WHITE);
+          //  getWindow().setNavigationBarDividerColor(Color.parseColor("#c4c4c4"));
+        }
         db = FirebaseFirestore.getInstance();
         getFcmToken();
         init();

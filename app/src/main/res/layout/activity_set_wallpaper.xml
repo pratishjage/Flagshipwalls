@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/main_container"
     tools:context=".SetWallpaperActivity">
 
     <ImageView
@@ -14,6 +15,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
+        android:id="@+id/top_frame"
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/black_overlay">
 

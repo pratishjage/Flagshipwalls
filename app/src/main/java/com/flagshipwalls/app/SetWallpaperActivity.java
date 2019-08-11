@@ -2,12 +2,18 @@ package com.flagshipwalls.app;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.OnApplyWindowInsetsListener;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -24,6 +30,7 @@ import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.flagshipwalls.app.utils.AppConstants;
+import com.flagshipwalls.app.utils.KotlinExt;
 
 import java.io.IOException;
 
@@ -97,6 +104,24 @@ public class SetWallpaperActivity extends AppCompatActivity {
 
             }
         });
+        KotlinExt kotlinExt = new KotlinExt();
+        kotlinExt.makeStatusBarTransparent(this);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_container), new OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
+                findViewById(R.id.top_frame).setPadding(0,insets.getSystemWindowInsetTop(),0,0);
+                findViewById(R.id.top_frame).getLayoutParams().height=(insets.getSystemWindowInsetTop()+getActionBarSize());
+           //kotlinExt.setMarginTop(findViewById(R.id.top_frame),insets.getSystemWindowInsetTop());
+               // findViewById(R.id.top_frame).kotlinExt.set
+                insets.consumeSystemWindowInsets();
+                return insets;
+            }
+        });
+        /*ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.content_container)) { _, insets ->
+                findViewById<FloatingActionButton>(R.id.fab1).setMarginTop(insets.systemWindowInsetTop)
+            findViewById<FloatingActionButton>(R.id.fab2).setMarginTop(insets.systemWindowInsetTop)
+            insets.consumeSystemWindowInsets()
+        }*/
     }
 
     @Override
@@ -104,4 +129,13 @@ public class SetWallpaperActivity extends AppCompatActivity {
         super.finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
+
+    public int getActionBarSize() {
+        TypedArray styledAttributes = getTheme().obtainStyledAttributes(new int[] { android.R.attr.actionBarSize });
+        int actionBarSize = (int) styledAttributes.getDimension(0, 0);
+        styledAttributes.recycle();
+        return actionBarSize;
+    }
+
+
 }

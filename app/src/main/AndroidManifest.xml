@@ -54,7 +54,7 @@
 
         <activity android:name=".PremiumWallActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/setWllpaperTheme"
+            android:theme="@style/preWllpaperTheme"
             >
 
         </activity>
