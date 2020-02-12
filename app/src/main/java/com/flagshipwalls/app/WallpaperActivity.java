@@ -75,13 +75,13 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
             switch (item.getItemId()) {
-                case R.id.navigation_home:
+                case R.id.navigation_devices:
                     mfragmentTags.clear();
                     mfragmentTags = new ArrayList<>();
                     init();
 
                     return true;
-                case R.id.navigation_dashboard:
+                case R.id.navigation_os:
 
                     if (osFragment == null) {
                         osFragment = OSFragment.newInstance();
@@ -98,22 +98,20 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
                     setFragmentVisible(getString(R.string.tag_fragment_os));
 
                     return true;
-                case R.id.navigation_notifications:
-
-                    if (devicesFragment == null) {
-                        devicesFragment = DevicesFragment.newInstance();
-                        fragmentTransaction.add(R.id.main_container, devicesFragment, getString(R.string.tag_fragment_devices));
+                case R.id.navigation_shuffle:
+                    if (homeFragment == null) {
+                        homeFragment = HomeFragment.newInstance();
+                        fragmentTransaction.add(R.id.main_container, homeFragment, getString(R.string.tag_fragment_home));
                         fragmentTransaction.commit();
-                        mfragmentTags.add(getString(R.string.tag_fragment_devices));
-                        mFragments.add(new FragmentTag(devicesFragment, getString(R.string.tag_fragment_devices)));
+                        mfragmentTags.add(getString(R.string.tag_fragment_home));
+                        mFragments.add(new FragmentTag(homeFragment, getString(R.string.tag_fragment_home)));
                     } else {
 
-                        mfragmentTags.remove(getString(R.string.tag_fragment_devices));
-                        mfragmentTags.add(getString(R.string.tag_fragment_devices));
+                        mfragmentTags.remove(getString(R.string.tag_fragment_home));
+                        mfragmentTags.add(getString(R.string.tag_fragment_home));
 
                     }
-
-                    setFragmentVisible(getString(R.string.tag_fragment_devices));
+                    setFragmentVisible(getString(R.string.tag_fragment_home));
 
                     return true;
             }
@@ -134,7 +132,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         View view = getSupportActionBar().getCustomView();
         backArrow = view.findViewById(R.id.back_arrow);
         headerText = view.findViewById(R.id.header_txt);
-        premiumwalllayout=view.findViewById(R.id.premiumwalllayout);
+        premiumwalllayout = view.findViewById(R.id.premiumwalllayout);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,9 +143,9 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fcmData = new HashMap<>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             getWindow().setNavigationBarColor(Color.WHITE);
-          //  getWindow().setNavigationBarDividerColor(Color.parseColor("#c4c4c4"));
+            //  getWindow().setNavigationBarDividerColor(Color.parseColor("#c4c4c4"));
         }
         db = FirebaseFirestore.getInstance();
         getFcmToken();
@@ -201,24 +199,24 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
     }
 
     private void init() {
-        if (homeFragment == null) {
+        if (devicesFragment == null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            homeFragment = HomeFragment.newInstance();
-            fragmentTransaction.add(R.id.main_container, homeFragment, getString(R.string.tag_fragment_home));
+            devicesFragment = DevicesFragment.newInstance();
+            fragmentTransaction.add(R.id.main_container, devicesFragment, getString(R.string.tag_fragment_devices));
             fragmentTransaction.commit();
-            mfragmentTags.add(getString(R.string.tag_fragment_home));
-            mFragments.add(new FragmentTag(homeFragment, getString(R.string.tag_fragment_home)));
+            mfragmentTags.add(getString(R.string.tag_fragment_devices));
+            mFragments.add(new FragmentTag(devicesFragment, getString(R.string.tag_fragment_devices)));
         } else {
 
-            mfragmentTags.remove(getString(R.string.tag_fragment_home));
-            mfragmentTags.add(getString(R.string.tag_fragment_home));
+            mfragmentTags.remove(getString(R.string.tag_fragment_devices));
+            mfragmentTags.add(getString(R.string.tag_fragment_devices));
 
         }
-        setFragmentVisible(getString(R.string.tag_fragment_home));
+        setFragmentVisible(getString(R.string.tag_fragment_devices));
         premiumwalllayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(WallpaperActivity.this,PremiumWallActivity.class));
+                startActivity(new Intent(WallpaperActivity.this, PremiumWallActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
@@ -278,13 +276,14 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         Menu menu = navigation.getMenu();
         MenuItem menuItem = null;
 
-        if (tagName.equals(getString(R.string.tag_fragment_home))) {
+
+        if (tagName.equals(getString(R.string.tag_fragment_devices))) {
             menuItem = menu.getItem(0);
             menuItem.setChecked(true);
         } else if (tagName.equals(getString(R.string.tag_fragment_os))) {
             menuItem = menu.getItem(1);
             menuItem.setChecked(true);
-        } else if (tagName.equals(getString(R.string.tag_fragment_devices))) {
+        } else if (tagName.equals(getString(R.string.tag_fragment_home))) {
             menuItem = menu.getItem(2);
             menuItem.setChecked(true);
         }
@@ -361,7 +360,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         premiumwalllayout.setVisibility(View.GONE);
 
         RelativeLayout.LayoutParams layoutParams =
-                (RelativeLayout.LayoutParams)headerText.getLayoutParams();
+                (RelativeLayout.LayoutParams) headerText.getLayoutParams();
         layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
         layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         headerText.setLayoutParams(layoutParams);
@@ -379,10 +378,9 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         backArrow.setVisibility(View.GONE);
         premiumwalllayout.setVisibility(View.VISIBLE);
         RelativeLayout.LayoutParams layoutParams =
-                (RelativeLayout.LayoutParams)headerText.getLayoutParams();
+                (RelativeLayout.LayoutParams) headerText.getLayoutParams();
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         headerText.setLayoutParams(layoutParams);
-
 
 
     }

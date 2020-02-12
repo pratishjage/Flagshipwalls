@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.flagshipwalls.app.utils.AppConstants;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.flagshipwalls.app.Adapters.Walladp;
@@ -45,7 +46,6 @@ public class HomeFragment extends Fragment implements LoadingListner, View.OnCli
     LinearLayout noConnectionLayout;
     MaterialButton retryBtn;
     TextView noConnectionTxt;
-
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -72,6 +72,7 @@ public class HomeFragment extends Fragment implements LoadingListner, View.OnCli
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         recyclerview = view.findViewById(R.id.recyclerview);
         progressbar = view.findViewById(R.id.progressbar);
         noConnectionLayout = view.findViewById(R.id.no_connection_layout);
@@ -134,7 +135,7 @@ public class HomeFragment extends Fragment implements LoadingListner, View.OnCli
         recyclerview.setLayoutManager(gridLayoutManager);
 
         baseQuery = db.collection("debug_wallpaper")
-                .orderBy("release_date", Query.Direction.DESCENDING);
+                .orderBy("created_at", Query.Direction.DESCENDING);
 
         PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(true)

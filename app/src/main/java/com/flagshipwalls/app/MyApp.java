@@ -7,11 +7,14 @@ import android.os.Build;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import io.fabric.sdk.android.Fabric;
 
 public class MyApp extends Application {
     public static final String CHANNEL_1_ID = "weeklyWallpaper";
     public static final String CHANNEL_2_ID = "newdevice";
+
     @Override
     public void onCreate() {
         super.onCreate();
