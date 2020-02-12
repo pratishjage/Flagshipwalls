@@ -29,5 +29,6 @@
     //new Wallp
     <string name="admob_app_id">ca-app-pub-3984559846472825~2334303278</string>
     <string name="ad_unit_id">ca-app-pub-3984559846472825/9962628812</string>
+    <string name="default_notification_channel_id">1010</string>
 
 </resources>

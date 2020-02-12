@@ -22,21 +22,44 @@
         android:layout_height="25dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"
-        android:background="@drawable/ic_arrow_back_black_24dp" />
+        android:background="@drawable/ic_arrow_back_black_24dp"
+        android:visibility="gone" />
+    <LinearLayout
+        android:id="@+id/premiumwalllayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="@drawable/custom_border"
+        android:orientation="horizontal"
+        android:layout_alignParentRight="true"
+        >
+        <ImageView
+            android:id="@+id/logo_image"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="2dp"
+            android:layout_toLeftOf="@+id/premium_txt"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ic_crown" />
+    <TextView
+        android:id="@+id/premium_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/custom_font"
+        android:text="Premium"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/colorAccent"
+        android:textSize="14sp" />
 
-    <ImageView
-        android:id="@+id/logo_image"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_centerInParent="true"
-      />
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/header_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+
+        android:layout_centerVertical="true"
         android:fontFamily="@font/custom_font"
         android:textAllCaps="true"
         android:textColor="@color/black"

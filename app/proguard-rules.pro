@@ -19,3 +19,42 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#===============GLIDE=================================================
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+# Uncomment for DexGuard only
+#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+
+
+
+#===============FIREBASE UI=================================================
+# https://github.com/firebase/FirebaseUI-Android/issues/1175
+-dontwarn okio.**
+-dontwarn retrofit2.Call
+-dontnote retrofit2.Platform$IOS$MainThreadExecutor
+-keep class androidx.recyclerview.widget.RecyclerView { *; }
+
+
+#===============FIRESTORE=================================================
+-include proguard-rules.pro
+-keepattributes SourceFile,LineNumberTable
+-dontwarn org.xmlpull.v1.**
+-dontnote org.xmlpull.v1.**
+-keep class org.xmlpull.** { *; }
+-keepclassmembers class org.xmlpull.** { *; }
+-keep class com.google.firebase.auth.** {*;}
+
+#===============ADMOB=================================================
+-keepattributes EnclosingMethod
+-keepattributes InnerClasses
+
+
+#===============crashlytics=================================================
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**

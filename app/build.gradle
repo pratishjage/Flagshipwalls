@@ -8,6 +8,8 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
 repositories {
@@ -15,6 +17,7 @@ repositories {
     maven {
         url "https://maven.google.com"
     }
+    mavenCentral()
 }
 
 apply plugin: 'com.google.gms.google-services'
@@ -25,8 +28,8 @@ android {
         applicationId "com.flagshipwalls.app"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 8
+        versionName "1.0.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -35,8 +38,14 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
     }
 }
 
@@ -51,7 +60,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
     implementation 'com.google.firebase:firebase-firestore:17.1.1'
-    implementation 'com.google.android.gms:play-services-ads:17.0.0'
+    implementation 'com.google.android.gms:play-services-ads:17.1.1'
     implementation 'com.google.android.material:material:1.0.0'
     def paging_version = "1.0.0"
 
@@ -63,4 +72,6 @@ dependencies {
         transitive = true;
     }
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation "androidx.core:core-ktx:1.0.1"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

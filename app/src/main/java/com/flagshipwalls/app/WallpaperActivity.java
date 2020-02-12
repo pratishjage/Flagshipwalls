@@ -2,6 +2,8 @@ package com.flagshipwalls.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +11,8 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.flagshipwalls.app.Fragments.DevicesFragment;
 import com.flagshipwalls.app.Fragments.HomeFragment;
@@ -17,21 +21,32 @@ import com.flagshipwalls.app.Fragments.QueryWallpaperFrgment;
 import com.flagshipwalls.app.interfaces.IWallpaperActivity;
 import com.flagshipwalls.app.utils.FragmentTag;
 import com.flagshipwalls.app.utils.AppConstants;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WallpaperActivity extends AppCompatActivity implements IWallpaperActivity {
 
@@ -45,10 +60,12 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
     private DevicesFragment devicesFragment;
     private QueryWallpaperFrgment queryWallpaperFrgment;
     private ImageView backArrow, logoImageview;
+    private LinearLayout premiumwalllayout;
     TextView headerText;
     String header;
     private InterstitialAd mInterstitialAd;
-
+    FirebaseFirestore db;
+    Map<String, Object> fcmData;
     String TAG = getClass().getSimpleName();
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -117,6 +134,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         View view = getSupportActionBar().getCustomView();
         backArrow = view.findViewById(R.id.back_arrow);
         headerText = view.findViewById(R.id.header_txt);
+        premiumwalllayout=view.findViewById(R.id.premiumwalllayout);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,10 +144,46 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         logoImageview = view.findViewById(R.id.logo_image);
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
+        fcmData = new HashMap<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1){
+            getWindow().setNavigationBarColor(Color.WHITE);
+          //  getWindow().setNavigationBarDividerColor(Color.parseColor("#c4c4c4"));
+        }
+        db = FirebaseFirestore.getInstance();
+        getFcmToken();
         init();
         setUpAd();
 
+    }
+
+    private void getFcmToken() {
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+
+                if (!task.isSuccessful()) {
+                    Log.w(TAG, "getInstanceId failed", task.getException());
+                    return;
+                }
+                // Get new Instance ID token
+                String token = task.getResult().getToken();
+                String instanceId = task.getResult().getId();
+                Log.d(TAG, "onCompleteFCM:" + token);
+                String android_id = Settings.Secure.getString(getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
+                fcmData.clear();
+                fcmData.put("token", token);
+                fcmData.put("instanceid", instanceId);
+                fcmData.put("deviceid", android_id);
+                fcmData.put("osversion", android.os.Build.VERSION.SDK_INT);
+                fcmData.put("created_at", FieldValue.serverTimestamp());
+
+
+                db.collection("users").document(android_id).set(fcmData, SetOptions.merge());
+
+            }
+        });
+        FirebaseMessaging.getInstance().subscribeToTopic("updates");
     }
 
     private void setUpAd() {
@@ -161,6 +215,13 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
 
         }
         setFragmentVisible(getString(R.string.tag_fragment_home));
+        premiumwalllayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(WallpaperActivity.this,PremiumWallActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
     }
 
     private void setFragmentVisible(String tagName) {
@@ -256,7 +317,7 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         Intent intent = new Intent(WallpaperActivity.this, SetWallpaperActivity.class);
         intent.putExtra(AppConstants.WALLURL, wallurl);
         intent.putExtra(AppConstants.DOWNLOAD_URL, downloadurl);
-        startActivityIfNeeded(intent,111);
+        startActivityIfNeeded(intent, 111);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
 
@@ -292,15 +353,22 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
     }
 
     private void showHeaderInFreagment() {
-        logoImageview.setVisibility(View.GONE);
+        logoImageview.setVisibility(View.VISIBLE);
         headerText.setVisibility(View.VISIBLE);
         Log.d(TAG, "showHeaderInFreagment: " + header);
         headerText.setText(header);
         backArrow.setVisibility(View.VISIBLE);
+        premiumwalllayout.setVisibility(View.GONE);
+
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams)headerText.getLayoutParams();
+        layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        headerText.setLayoutParams(layoutParams);
     }
 
     private void showLogoInFragment() {
-        logoImageview.setVisibility(View.GONE);
+        logoImageview.setVisibility(View.VISIBLE);
         headerText.setVisibility(View.VISIBLE);
         header = "Flagship Walls";
         headerText.setText(header);
@@ -309,6 +377,14 @@ public class WallpaperActivity extends AppCompatActivity implements IWallpaperAc
         headerText.setVisibility(View.GONE);
         headerText.setText(header);*/
         backArrow.setVisibility(View.GONE);
+        premiumwalllayout.setVisibility(View.VISIBLE);
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams)headerText.getLayoutParams();
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        headerText.setLayoutParams(layoutParams);
+
+
+
     }
 
 }

@@ -22,6 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.SET_WALLPAPER" />
+                <category android:name="android.intent.category.DEFAULT" />
+
             </intent-filter>
         </activity>
 
@@ -34,7 +37,30 @@
 
         <activity
             android:name=".SetWallpaperActivity"
-            android:theme="@style/setWllpaperTheme"></activity>
+            android:theme="@style/setWllpaperTheme" />
+
+        <service android:name=".Fcm.FCMService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_ficon" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+
+        <activity android:name=".PremiumWallActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/preWllpaperTheme"
+            >
+
+        </activity>
     </application>
 
 </manifest>
